@@ -124,6 +124,13 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
 
     @objc
     func multipleSelectionButtonTapped() {
+        let asset = mediaManager.fetchResult[currentlySelectedIndex]
+        ///只要不是图片类型，就不允许多选
+        guard case .image = asset.mediaType else {
+            let alert = YPAlert.videoChooseAmountLimit(self.view)
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
         
         if !multipleSelectionEnabled {
             selection.removeAll()
@@ -138,18 +145,19 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
 
         if multipleSelectionEnabled {
             if selection.isEmpty {
-                let asset = mediaManager.fetchResult[currentlySelectedIndex]
                 selection = [
                     YPLibrarySelection(index: currentlySelectedIndex,
                                        cropRect: v.currentCropRect(),
                                        scrollViewContentOffset: v.assetZoomableView!.contentOffset,
                                        scrollViewZoomScale: v.assetZoomableView!.zoomScale,
-                                       assetIdentifier: asset.localIdentifier)
+                                       assetIdentifier: asset.localIdentifier,
+                                       mediaType: asset.mediaType,
+                                       isSelected: true)
                 ]
             }
         } else {
             selection.removeAll()
-            addToSelection(indexPath: IndexPath(row: currentlySelectedIndex, section: 0))
+            addToSelection(indexPath: IndexPath(row: currentlySelectedIndex, section: 0), isSelected: false)
         }
 
         v.assetViewContainer.setMultipleSelectionMode(on: multipleSelectionEnabled)
@@ -237,7 +245,7 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
                                              animated: false,
                                              scrollPosition: UICollectionView.ScrollPosition())
             if !multipleSelectionEnabled {
-                addToSelection(indexPath: IndexPath(row: 0, section: 0))
+                addToSelection(indexPath: IndexPath(row: 0, section: 0), isSelected: false)
             }
         } else {
             delegate?.noPhotosForOptions()

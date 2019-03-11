@@ -20,3 +20,8 @@
 "YPImagePickerVideoTooLong" = "ثانية %@ اختار فيديو بمدة اقل من ";
 "YPImagePickerVideoTooShort" = "الفيديو يجب ان يكون على الآقل %@ ثانية";
 "YPImagePickerWarningItemsLimit" = "الحد المسموح هوه %d صورة او فيديو";
+
+"YPImagePickerWarningCanChooseOneType" = "Can't select photos and videos at the same time";
+
+"YPImagePickerWarningMaxVideoLimitTitle" = "Video Amount Limit";
+"YPImagePickerWarningMaxVideoLimitText" = "The limit is One Video";

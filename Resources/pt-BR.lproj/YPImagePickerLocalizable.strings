@@ -19,4 +19,9 @@
 "YPImagePickerVideoDurationTitle" = "Duração do vídeo";
 "YPImagePickerVideoTooLong" = "Escolha um vídeo menor que %@ segundos";
 "YPImagePickerVideoTooShort" = "O vídeo deve ter no mínimo %@ segundos de duração";
-"YPImagePickerWarningItemsLimit" = "O limite é de %d fotos ou vídeos";
+"YPImagePickerWarningItemsLimit" = "O limite é de %d fotos";
+
+"YPImagePickerWarningCanChooseOneType" = "Can't select photos and videos at the same time";
+
+"YPImagePickerWarningMaxVideoLimitTitle" = "Video Amount Limit";
+"YPImagePickerWarningMaxVideoLimitText" = "The limit is One Video";

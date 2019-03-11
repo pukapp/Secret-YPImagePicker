@@ -19,4 +19,9 @@
 "YPImagePickerVideoDurationTitle" = "视频时长";
 "YPImagePickerVideoTooLong" = "视频时长大于 %@ 秒";
 "YPImagePickerVideoTooShort" = "视频时长小于 %@ 秒";
-"YPImagePickerWarningItemsLimit" = "图片或视频的最多可选数量为 %d ";
+"YPImagePickerWarningItemsLimit" = "图片的最多可选数量为 %d ";
+
+"YPImagePickerWarningCanChooseOneType" = "不能同时选择照片和视频";
+
+"YPImagePickerWarningMaxVideoLimitTitle" = "视频数量";
+"YPImagePickerWarningMaxVideoLimitText" = "视频最多可选一个";

@@ -19,4 +19,9 @@
 "YPImagePickerVideoDurationTitle" = "Video lengte";
 "YPImagePickerVideoTooLong" = "Selecteer een video korter dan %@ seconden";
 "YPImagePickerVideoTooShort" = "Video moet %@ seconden of langer zijn";
-"YPImagePickerWarningItemsLimit" = "De limiet is %d foto's of video's";
+"YPImagePickerWarningItemsLimit" = "De limiet is %d foto's";
+
+"YPImagePickerWarningCanChooseOneType" = "Can't select photos and videos at the same time";
+
+"YPImagePickerWarningMaxVideoLimitTitle" = "Video Amount Limit";
+"YPImagePickerWarningMaxVideoLimitText" = "The limit is One Video";
