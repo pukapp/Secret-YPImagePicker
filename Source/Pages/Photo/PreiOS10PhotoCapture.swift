@@ -12,7 +12,7 @@ import UIKit
 
 class PreiOS10PhotoCapture: YPPhotoCapture {
 
-    let sessionQueue = DispatchQueue(label: "YPCameraVCSerialQueue", qos: .background)
+    let sessionQueue = DispatchQueue(label: "YPCameraVCSerialQueue", qos: .userInitiated)
     let session = AVCaptureSession()
     var deviceInput: AVCaptureDeviceInput?
     var device: AVCaptureDevice? { return deviceInput?.device }
