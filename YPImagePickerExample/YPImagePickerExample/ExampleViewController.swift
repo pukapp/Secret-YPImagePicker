@@ -24,7 +24,7 @@ class ExampleViewController: UIViewController {
 
         self.view.backgroundColor = .white
 
-        selectedImageV.contentMode = .scaleAspectFit
+        selectedImageV.contentMode = .scaleAspectFill
         selectedImageV.frame = CGRect(x: 0,
                                       y: 0,
                                       width: UIScreen.main.bounds.width,
@@ -70,7 +70,7 @@ class ExampleViewController: UIViewController {
         /* Uncomment and play around with the configuration 👨‍🔬 🚀 */
 
         /* Set this to true if you want to force the  library output to be a squared image. Defaults to false */
-//         config.library.onlySquare = true
+         config.library.onlySquare = false
 
         /* Set this to true if you want to force the camera output to be a squared image. Defaults to true */
         // config.onlySquareImagesFromCamera = false
@@ -118,14 +118,14 @@ class ExampleViewController: UIViewController {
 
         /* Defines the time limit for recording videos.
            Default is 30 seconds. */
-        // config.video.recordingTimeLimit = 5.0
+        config.video.recordingTimeLimit = 15.0
 
         /* Defines the time limit for videos from the library.
            Defaults to 60 seconds. */
-        config.video.libraryTimeLimit = 500.0
+        config.video.libraryTimeLimit = 15.0
 
         /* Adds a Crop step in the photo taking process, after filters. Defaults to .none */
-        config.showsCrop = .rectangle(ratio: (16/9))
+//        config.showsCrop = .rectangle(ratio: (16/9))
 
         /* Defines the overlay view for the camera. Defaults to UIView(). */
         // let overlayView = UIView()
@@ -134,7 +134,7 @@ class ExampleViewController: UIViewController {
         // config.overlayView = overlayView
 
         /* Customize wordings */
-        config.wordings.libraryTitle = "Gallery"
+       // config.wordings.libraryTitle = "相册"
 
         /* Defines if the status bar should be hidden when showing the picker. Default is true */
         config.hidesStatusBar = false
@@ -142,7 +142,7 @@ class ExampleViewController: UIViewController {
         /* Defines if the bottom bar should be hidden when showing the picker. Default is false */
         config.hidesBottomBar = false
 
-        config.library.maxNumberOfItems = 5
+        config.library.maxNumberOfItems = 9
         
         /* Disable scroll to change between mode */
         // config.isScrollToChangeModesEnabled = false
