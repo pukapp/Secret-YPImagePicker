@@ -20,7 +20,11 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
     
     @IBOutlet weak var coverImageView: UIImageView!
     @IBOutlet weak var coverThumbSelectorView: ThumbSelectorView!
-
+    ///新增时间范围表示
+    @IBOutlet weak var startTimeLabel: UILabel!
+    @IBOutlet weak var endTimeLabel: UILabel!
+    @IBOutlet weak var totalTimeLabel: UILabel!
+    
     public var inputVideo: YPMediaVideo!
     public var inputAsset: AVAsset { return AVAsset(url: inputVideo.url) }
     
@@ -247,6 +251,9 @@ extension YPVideoFiltersVC: TrimmerViewDelegate {
     }
     
     public func didChangePositionBar(_ playerTime: CMTime) {
+        self.startTimeLabel.text = YPHelper.formattedStrigFrom(trimmerView?.startTime?.seconds ?? 0)
+        self.endTimeLabel.text = YPHelper.formattedStrigFrom(trimmerView?.endTime?.seconds ?? 0)
+
         stopPlaybackTimeChecker()
         videoView.pause()
         videoView.player.seek(to: playerTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)

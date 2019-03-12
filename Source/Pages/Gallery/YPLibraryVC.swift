@@ -314,16 +314,24 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
             return true
         }
         
-        let tooLong = asset.duration > YPConfig.video.libraryTimeLimit
+        //let tooLong = asset.duration > YPConfig.video.libraryTimeLimit
         let tooShort = asset.duration < YPConfig.video.minimumTimeLimit
         
-        if tooLong || tooShort {
+//        if tooLong || tooShort {
+//            DispatchQueue.main.async {
+//                let alert = tooLong ? YPAlert.videoTooLongAlert(self.view) : YPAlert.videoTooShortAlert(self.view)
+//                self.present(alert, animated: true, completion: nil)
+//            }
+//            return false
+//        }
+        ///长度大了不a判断，可以到下个界面剪辑
+        if tooShort {
             DispatchQueue.main.async {
-                let alert = tooLong ? YPAlert.videoTooLongAlert(self.view) : YPAlert.videoTooShortAlert(self.view)
-                self.present(alert, animated: true, completion: nil)
+                self.present(YPAlert.videoTooShortAlert(self.view), animated: true, completion: nil)
             }
             return false
         }
+
         
         return true
     }

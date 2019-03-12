@@ -33,6 +33,14 @@ public class YPVideoCaptureVC: UIViewController, YPPermissionCheckable {
                 $0.timeElapsed = timeElapsed
             }
         }
+        videoHelper.recordToShort = { [weak self] in
+            guard let `self` = self else { return }
+            self.updateState {
+                $0.progress = 0
+                $0.timeElapsed = 0
+            }
+            self.present(YPAlert.videoTooShortAlert(self.view), animated: true, completion: nil)
+        }
     }
     
     // MARK: - View LifeCycle
@@ -41,7 +49,7 @@ public class YPVideoCaptureVC: UIViewController, YPPermissionCheckable {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        v.timeElapsedLabel.isHidden = false // Show the time elapsed label since we're in the video screen.
+        
         setupButtons()
         linkButtons()
         
@@ -57,7 +65,7 @@ public class YPVideoCaptureVC: UIViewController, YPPermissionCheckable {
                 return
             }
             self?.videoHelper.start(previewView: strongSelf.v.previewViewContainer,
-                                    withVideoRecordingLimit: YPConfig.video.recordingTimeLimit,
+                                    withVideoRecordingLimit: (YPConfig.video.minimumTimeLimit, YPConfig.video.recordingTimeLimit),
                                     completion: {
                                         DispatchQueue.main.async {
                                             self?.v.shotButton.isEnabled = true
@@ -85,8 +93,12 @@ public class YPVideoCaptureVC: UIViewController, YPPermissionCheckable {
     
     private func linkButtons() {
         v.flashButton.addTarget(self, action: #selector(flashButtonTapped), for: .touchUpInside)
-        v.shotButton.addTarget(self, action: #selector(shotButtonTapped), for: .touchUpInside)
         v.flipButton.addTarget(self, action: #selector(flipButtonTapped), for: .touchUpInside)
+        
+        v.shotButton.addTarget(self, action: #selector(startRecording), for: .touchDown)
+        v.shotButton.addTarget(self, action: #selector(stopRecording), for: .touchUpInside)
+        v.shotButton.addTarget(self, action: #selector(stopRecording), for: .touchCancel)
+        v.shotButton.addTarget(self, action: #selector(stopRecording), for: .touchDragOutside)
     }
     
     // MARK: - Flip Camera
@@ -118,17 +130,17 @@ public class YPVideoCaptureVC: UIViewController, YPPermissionCheckable {
     
     // MARK: - Toggle Recording
     
+//    @objc
+//    func shotButtonTapped() {
+//        doAfterPermissionCheck { [weak self] in
+//            self?.toggleRecording()
+//        }
+//    }
+    
+//    private func toggleRecording() {
+//        videoHelper.isRecording ? stopRecording() : startRecording()
+//    }
     @objc
-    func shotButtonTapped() {
-        doAfterPermissionCheck { [weak self] in
-            self?.toggleRecording()
-        }
-    }
-    
-    private func toggleRecording() {
-        videoHelper.isRecording ? stopRecording() : startRecording()
-    }
-    
     private func startRecording() {
         videoHelper.startRecording()
         updateState {
@@ -136,7 +148,9 @@ public class YPVideoCaptureVC: UIViewController, YPPermissionCheckable {
         }
     }
     
+    @objc
     private func stopRecording() {
+        
         videoHelper.stopRecording()
         updateState {
             $0.isRecording = false
@@ -200,14 +214,21 @@ public class YPVideoCaptureVC: UIViewController, YPPermissionCheckable {
         v.flashButton.setImage(flashImage(for: state.flashMode), for: .normal)
         v.flashButton.isEnabled = !state.isRecording
         v.flashButton.isHidden = state.flashMode == .noFlash
-        v.shotButton.setImage(state.isRecording ? YPConfig.icons.captureVideoOnImage : YPConfig.icons.captureVideoImage,
-                              for: .normal)
+        //v.shotButton.setImage(state.isRecording ? YPConfig.icons.captureVideoOnImage : YPConfig.icons.captureVideoImage,
+                             // for: .normal)
         v.flipButton.isEnabled = !state.isRecording
         v.progressBar.progress = state.progress
         v.timeElapsedLabel.text = YPHelper.formattedStrigFrom(state.timeElapsed)
+        if state.isRecording {
+            v.recordShineImgV.isHidden = !v.recordShineImgV.isHidden
+        } else {
+            v.recordShineImgV.isHidden = true
+        }
+        v.recordTip.isHidden = state.isRecording
+        v.timeElapsedLabel.isHidden = !state.isRecording
         
         // Animate progress bar changes.
-        UIView.animate(withDuration: 1, animations: v.progressBar.layoutIfNeeded)
+        UIView.animate(withDuration: 0.5, animations: v.progressBar.layoutIfNeeded)
     }
     
     private func resetVisualState() {
