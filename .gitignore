@@ -38,5 +38,6 @@ Pods/
 
 YPImagePickerExample/Index/
 Index/
+Carthage/
 
 *.lock
