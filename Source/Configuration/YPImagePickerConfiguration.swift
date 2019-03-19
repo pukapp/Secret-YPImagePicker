@@ -188,23 +188,23 @@ public struct YPConfigVideo {
     /// Choose the videoCompression.  Defaults to AVAssetExportPresetHighestQuality
     public var compression: String = AVAssetExportPresetHighestQuality
     
-    /// Choose the result video extension if you trim or compress a video. Defaults to mov.
-    public var fileType: AVFileType = .mov
+    /// Choose the result video extension if you trim or compress a video. Defaults to mp4.
+    public var fileType: AVFileType = .mp4
     
     /// Defines the time limit for recording videos.
     /// Default is 60 seconds.
-    public var recordingTimeLimit: TimeInterval = 15.0
+    public var recordingTimeLimit: TimeInterval = 20.0
     
     /// Defines the time limit for videos from the library.
     /// Defaults to 60 seconds.
-    public var libraryTimeLimit: TimeInterval = 15.0
+    public var libraryTimeLimit: TimeInterval = 20.0
     
     /// Defines the minimum time for the video
     /// Defaults to 3 seconds.
     public var minimumTimeLimit: TimeInterval = 3.0
     
     /// The maximum duration allowed for the trimming. Change it before setting the asset, as the asset preview
-    public var trimmerMaxDuration: Double = 15.0
+    public var trimmerMaxDuration: Double = 20.0
     
     /// The minimum duration allowed for the trimming.
     /// The handles won't pan further if the minimum duration is attained.

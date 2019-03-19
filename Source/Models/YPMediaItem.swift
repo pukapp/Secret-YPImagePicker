@@ -36,11 +36,21 @@ public class YPMediaVideo {
     public var url: URL
     public let fromCamera: Bool
     public var asset: PHAsset?
-
-    public init(thumbnail: UIImage, videoURL: URL, fromCamera: Bool = false, asset: PHAsset? = nil) {
+    ///拍摄的时候是宽高一致的
+    public let naturalSize: String
+    public let duration: TimeInterval
+    
+    public init(thumbnail: UIImage,
+                videoURL: URL,
+                fromCamera: Bool = false,
+                naturalSize: String,
+                duration: TimeInterval,
+                asset: PHAsset? = nil) {
         self.thumbnail = thumbnail
         self.url = videoURL
         self.fromCamera = fromCamera
+        self.naturalSize = naturalSize
+        self.duration = duration
         self.asset = asset
     }
 }

@@ -74,10 +74,13 @@ public class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
         if YPConfig.screens.contains(.video) {
             videoVC = YPVideoCaptureVC()
             videoVC?.didCaptureVideo = { [weak self] videoURL in
-                self?.didSelectItems?([YPMediaItem
-                    .video(v: YPMediaVideo(thumbnail: thumbnailFromVideoPath(videoURL),
-                                           videoURL: videoURL,
-                                           fromCamera: true))])
+                let video = YPMediaVideo(thumbnail: thumbnailFromVideoPath(videoURL),
+                                         videoURL: videoURL,
+                                         fromCamera: true,
+                                         naturalSize: naturalSizeFormVideoPath(videoURL),
+                                         duration: durationFormVideoPath(videoURL))
+                let item = YPMediaItem.video(v: video)
+                self?.didSelectItems?([item])
             }
         }
         

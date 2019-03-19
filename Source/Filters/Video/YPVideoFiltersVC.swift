@@ -97,6 +97,13 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
         
         selectTrim()
         videoView.loadVideo(inputVideo)
+        if let endTime = trimmerView?.endTime?.seconds {
+            if endTime > YPConfig.video.trimmerMaxDuration {
+                self.endTimeLabel.text = YPHelper.formattedStrigFrom(YPConfig.video.trimmerMaxDuration)
+            }else {
+                self.endTimeLabel.text = YPHelper.formattedStrigFrom(endTime)
+            }
+        }
 
         super.viewDidAppear(animated)
     }
@@ -128,6 +135,9 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
                 .assetByTrimming(startTime: trimmerView.startTime ?? CMTime.zero,
                                  endTime: trimmerView.endTime ?? inputAsset.duration)
             
+            
+            let duration = self.trimmerView!.endTime!.seconds - self.trimmerView!.startTime!.seconds
+            
             // Looks like file:///private/var/mobile/Containers/Data/Application
             // /FAD486B4-784D-4397-B00C-AD0EFFB45F52/tmp/8A2B410A-BD34-4E3F-8CB5-A548A946C1F1.mov
             let destinationURL = URL(fileURLWithPath: NSTemporaryDirectory())
@@ -138,7 +148,10 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
                 
                 DispatchQueue.main.async {
                     let resultVideo = YPMediaVideo(thumbnail: strongSelf.coverImageView.image!,
-                                                   videoURL: destinationURL, asset: strongSelf.inputVideo.asset)
+                                                   videoURL: destinationURL,
+                                                   naturalSize: asset.getVideoNaturalSize(),
+                                                   duration: duration,
+                                                   asset: strongSelf.inputVideo.asset)
                     didSave(YPMediaItem.video(v: resultVideo))
                     strongSelf.setupRightBarButtonItem()
                 }
