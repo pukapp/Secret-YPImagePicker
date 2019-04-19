@@ -25,3 +25,5 @@
 
 "YPImagePickerWarningMaxVideoLimitTitle" = "视频数量";
 "YPImagePickerWarningMaxVideoLimitText" = "视频最多可选一个";
+"YPImagePickerWarningBadVideoTitle" = "处理失败";
+"YPImagePickerWarningBadVideoText" = "视频文件已经损坏了";

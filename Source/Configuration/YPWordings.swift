@@ -45,4 +45,6 @@ public struct YPWordings {
     public var warningCanChooseOneType = ypLocalized("YPImagePickerWarningCanChooseOneType")
     public var warningMaxVideoLimitTitle = ypLocalized("YPImagePickerWarningMaxVideoLimitTitle")
     public var warningMaxVideoLimitText = ypLocalized("YPImagePickerWarningMaxVideoLimitText")
+    public var warningBadVideoTitle = ypLocalized("YPImagePickerWarningBadVideoTitle")
+    public var warningBadVideoText = ypLocalized("YPImagePickerWarningBadVideoText")
 }

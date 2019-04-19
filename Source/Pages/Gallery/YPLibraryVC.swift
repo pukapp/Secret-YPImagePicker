@@ -387,7 +387,8 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
     
     private func checkVideoLengthAndCrop(for asset: PHAsset,
                                          withCropRect: CGRect? = nil,
-                                         callback: @escaping (_ videoURL: URL) -> Void) {
+                                         callback: @escaping (_ videoURL: URL) -> Void,
+                                         callError: @escaping (Error?) -> Void) {
         if fitsVideoLengthLimits(asset: asset) == true {
             delegate?.libraryViewStartedLoading()
             let normalizedCropRect = withCropRect ?? DispatchQueue.main.sync { v.currentCropRect() }
@@ -398,7 +399,7 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
                                         y: yCrop,
                                         width: ts.width,
                                         height: ts.height)
-            mediaManager.fetchVideoUrlAndCrop(for: asset, cropRect: resultCropRect, callback: callback)
+            mediaManager.fetchVideoUrlAndCrop(for: asset, cropRect: resultCropRect, callback: callback, callError: callError)
         }
     }
     
@@ -438,7 +439,7 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
                         }
                         
                     case .video:
-                        self.checkVideoLengthAndCrop(for: asset.asset, withCropRect: asset.cropRect) { videoURL in
+                        self.checkVideoLengthAndCrop(for: asset.asset, withCropRect: asset.cropRect, callback: { videoURL in
                             let videoItem = YPMediaVideo(thumbnail: thumbnailFromVideoPath(videoURL),
                                                          videoURL: videoURL,
                                                          naturalSize: naturalSizeFormVideoPath(videoURL),
@@ -446,7 +447,13 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
                                                          asset: asset.asset)
                             resultMediaItems.append(YPMediaItem.video(v: videoItem))
                             asyncGroup.leave()
-                        }
+                        }, callError: { error in
+                            DispatchQueue.main.async {
+                                self.delegate?.libraryViewFinishedLoading()
+                                let alert = YPAlert.badvideoChoose(self.view)
+                                self.present(alert, animated: true, completion: nil)
+                            }
+                        })
                     default:
                         break
                     }
@@ -469,6 +476,12 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
                                                      duration: durationFormVideoPath(videoURL),
                                                      asset: asset)
                             videoCallback(video)
+                        }
+                    }, callError: { error in
+                        DispatchQueue.main.async {
+                            self.delegate?.libraryViewFinishedLoading()
+                            let alert = YPAlert.badvideoChoose(self.view)
+                            self.present(alert, animated: true, completion: nil)
                         }
                     })
                 case .image:

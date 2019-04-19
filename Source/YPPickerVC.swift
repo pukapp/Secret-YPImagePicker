@@ -16,6 +16,10 @@ protocol ImagePickerDelegate: AnyObject {
 
 public class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
     
+    deinit {
+        print("YPPickerVC释放了")
+    }
+    
     let albumsManager = YPAlbumsManager()
     var shouldHideStatusBar = false
     var initialStatusBarHidden = false

@@ -65,7 +65,7 @@ class LibraryMediaManager {
         }
     }
     
-    func fetchVideoUrlAndCrop(for videoAsset: PHAsset, cropRect: CGRect, callback: @escaping (URL) -> Void) {
+    func fetchVideoUrlAndCrop(for videoAsset: PHAsset, cropRect: CGRect, callback: @escaping (URL) -> Void, callError: @escaping (Error?) -> Void) {
         let videosOptions = PHVideoRequestOptions()
         videosOptions.isNetworkAccessAllowed = true
         imageManager?.requestAVAsset(forVideo: videoAsset, options: videosOptions) { asset, _, _ in
@@ -141,7 +141,11 @@ class LibraryMediaManager {
                                 self.currentExportSessions.remove(at: index)
                             }
                         } else {
+                            if let index = self.currentExportSessions.index(of:exportSession!) {
+                                self.currentExportSessions.remove(at: index)
+                            }
                             let error = exportSession?.error
+                            callError(error)
                             print("error exporting video \(String(describing: error))")
                         }
                     }

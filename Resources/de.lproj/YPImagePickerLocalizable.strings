@@ -25,3 +25,5 @@
 
 "YPImagePickerWarningMaxVideoLimitTitle" = "Video Amount Limit";
 "YPImagePickerWarningMaxVideoLimitText" = "The limit is One Video";
+"YPImagePickerWarningBadVideoTitle" = "The Bad Video";
+"YPImagePickerWarningBadVideoText" = "The video has been corrupted";
