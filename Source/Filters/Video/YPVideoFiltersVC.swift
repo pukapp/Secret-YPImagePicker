@@ -136,7 +136,7 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
                                  endTime: trimmerView.endTime ?? inputAsset.duration)
             
             
-            let duration: Int = Int((self.trimmerView!.endTime!.seconds - self.trimmerView!.startTime!.seconds))
+            let duration = self.trimmerView!.endTime!.seconds - self.trimmerView!.startTime!.seconds
             
             // Looks like file:///private/var/mobile/Containers/Data/Application
             // /FAD486B4-784D-4397-B00C-AD0EFFB45F52/tmp/8A2B410A-BD34-4E3F-8CB5-A548A946C1F1.mov
@@ -150,7 +150,7 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
                     let resultVideo = YPMediaVideo(thumbnail: strongSelf.coverImageView.image!,
                                                    videoURL: destinationURL,
                                                    naturalSize: asset.getVideoNaturalSize(),
-                                                   duration: TimeInterval(duration),
+                                                   duration: duration,
                                                    asset: strongSelf.inputVideo.asset)
                     didSave(YPMediaItem.video(v: resultVideo))
                     strongSelf.setupRightBarButtonItem()
