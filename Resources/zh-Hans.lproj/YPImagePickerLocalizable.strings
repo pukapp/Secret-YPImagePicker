@@ -17,8 +17,8 @@
 "YPImagePickerTrim" = "剪辑";
 "YPImagePickerVideo" = "录像";
 "YPImagePickerVideoDurationTitle" = "视频时长";
-"YPImagePickerVideoTooLong" = "视频时长大于 %@ 秒";
-"YPImagePickerVideoTooShort" = "视频时长小于 %@ 秒";
+"YPImagePickerVideoTooLong" = "视频时长不得多于 %@ 秒";
+"YPImagePickerVideoTooShort" = "视频时长不得少于 %@ 秒";
 "YPImagePickerWarningItemsLimit" = "图片的最多可选数量为 %d ";
 
 "YPImagePickerWarningCanChooseOneType" = "不能同时选择照片和视频";

@@ -271,6 +271,7 @@ extension YPVideoCaptureHelper: AVCaptureFileOutputRecordingDelegate {
         let timeElapsed = Date().timeIntervalSince(dateVideoStarted)
         if  timeElapsed < self.videoRecordingTimeLimit.min {///增加录制最小时间限制
             self.recordToShort?()
+            self.stopRecording()
         } else {
             YPVideoProcessor.cropToSquare(filePath: outputFileURL) { [weak self] url in
                 guard let _self = self, let u = url else { return }
