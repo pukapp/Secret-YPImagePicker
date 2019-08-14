@@ -144,6 +144,9 @@ class LibraryMediaManager {
                             if let index = self.currentExportSessions.index(of:exportSession!) {
                                 self.currentExportSessions.remove(at: index)
                             }
+                            self.exportTimer?.invalidate()
+                            self.exportTimer = nil
+                            self.v?.updateProgress(0)
                             let error = exportSession?.error
                             callError(error)
                             print("error exporting video \(String(describing: error))")
