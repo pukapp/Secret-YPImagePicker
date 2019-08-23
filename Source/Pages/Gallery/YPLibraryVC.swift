@@ -52,6 +52,44 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
         registerForTapOnPreview()
         refreshMediaRequest()
         
+        ///加载前先判断是否存在已选择，存在则添加到选中数据源中
+        var isChooseVideo = false
+        if let items = YPImagePickerConfiguration.shared.library.selectedAssetIdentifiers, items.count > 0 {
+            for iden in items {
+                for index in 0...(mediaManager.fetchResult.count-1) {
+                    let asset = mediaManager.fetchResult[index]
+                    if iden == asset.localIdentifier {
+                        if asset.mediaType == .video {
+                            ///由于视频只是单选，所以这里判断有视频就直接跳出循环，并且选中当前视频asset
+                            isChooseVideo = true
+                            currentlySelectedIndex = index
+                            changeAsset(asset)
+                            v.collectionView.selectItem(at: IndexPath(row: index, section: 0),
+                                                        animated: false,
+                                                        scrollPosition: UICollectionView.ScrollPosition())
+                            break
+                        } else {
+                            if selection.count == 0 {
+                                changeAsset(asset)
+                                v.collectionView.selectItem(at: IndexPath(row: index, section: 0),
+                                                            animated: false,
+                                                            scrollPosition: UICollectionView.ScrollPosition())
+                            }
+                             self.addToSelection(indexPath: IndexPath.init(row: index, section: 0), isSelected: true)
+                        }
+                    }
+                }
+            }
+            if selection.count > 0 && !isChooseVideo {
+                currentlySelectedIndex = selection.first!.index
+                multipleSelectionEnabled = true
+                v.assetViewContainer.setMultipleSelectionMode(on: multipleSelectionEnabled)
+            }
+        }
+        if !multipleSelectionEnabled && !isChooseVideo {
+            addToSelection(indexPath: IndexPath(row: 0, section: 0), isSelected: false)
+        }
+        
         v.assetViewContainer.multipleSelectionButton.isHidden = !(YPConfig.library.maxNumberOfItems > 1)
         v.maxNumberWarningLabel.text = String(format: YPConfig.wordings.warningMaxItemsLimit, YPConfig.library.maxNumberOfItems)
     }
@@ -244,9 +282,6 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
             v.collectionView.selectItem(at: IndexPath(row: 0, section: 0),
                                              animated: false,
                                              scrollPosition: UICollectionView.ScrollPosition())
-            if !multipleSelectionEnabled {
-                addToSelection(indexPath: IndexPath(row: 0, section: 0), isSelected: false)
-            }
         } else {
             delegate?.noPhotosForOptions()
         }
@@ -521,6 +556,7 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
     // MARK: - Deinit
     
     deinit {
+        debugPrint("secret:ios===YPLibraryVC释放了")
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
 }

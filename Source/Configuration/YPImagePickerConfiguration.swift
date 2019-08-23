@@ -139,6 +139,9 @@ public struct YPConfigLibrary {
 
     /// Allow to skip the selections gallery when selecting the multiple media items. Defaults to false.
     public var skipSelectionsGallery = false
+    
+    ///新增一个从外面传入的选中的照片标识属性，当此属性存在时，需要显示已选择的状态
+    public var selectedAssetIdentifiers: [String]?
 }
 
 /// Encapsulates video specific settings.

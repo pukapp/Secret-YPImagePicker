@@ -149,7 +149,7 @@ public class YPImagePicker: UINavigationController {
     }
     
     deinit {
-        print("Picker deinited 👍")
+        debugPrint("secret:ios===Picker deinited 👍")
     }
     
     private func setupLoadingView() {
