@@ -67,4 +67,34 @@ struct YPAlert {
         alert.addAction(UIAlertAction(title: YPConfig.wordings.ok, style: UIAlertAction.Style.default, handler: nil))
         return alert
     }
+    
+    ///选择图片数量超出限制
+    static func maxItemsLimit(_ sourceView: UIView) -> UIAlertController {
+        let msg = String(format: YPConfig.wordings.warningMaxItemsLimit, YPConfig.library.maxNumberOfItems)
+        let alert = UIAlertController(title: YPConfig.wordings.warningMaxItemsLimitTitle,
+                                      message: msg,
+                                      preferredStyle: .actionSheet)
+        if let popoverController = alert.popoverPresentationController {
+            popoverController.sourceView = sourceView
+            popoverController.sourceRect = CGRect(x: sourceView.bounds.midX, y: sourceView.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+        alert.addAction(UIAlertAction(title: YPConfig.wordings.ok, style: UIAlertAction.Style.default, handler: nil))
+        return alert
+    }
+    
+    ///不能同时选择图片和视频
+    static func canChooseOneType(_ sourceView: UIView) -> UIAlertController {
+        let msg = YPConfig.wordings.warningCanChooseOneType
+        let alert = UIAlertController(title: YPConfig.wordings.warningCanChooseOneTypeTitle,
+                                      message: msg,
+                                      preferredStyle: .actionSheet)
+        if let popoverController = alert.popoverPresentationController {
+            popoverController.sourceView = sourceView
+            popoverController.sourceRect = CGRect(x: sourceView.bounds.midX, y: sourceView.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+        alert.addAction(UIAlertAction(title: YPConfig.wordings.ok, style: UIAlertAction.Style.default, handler: nil))
+        return alert
+    }
 }

@@ -45,7 +45,7 @@ class YPMultipleSelectionIndicator: UIView {
             circle.layer.borderWidth = 0
             label.text = "\(number)"
         } else {
-            circle.backgroundColor = UIColor.white.withAlphaComponent(0.3)
+            circle.backgroundColor = UIColor(r: 170, g: 170, b: 170, a: 0.4)
             circle.layer.borderColor = UIColor.white.cgColor
             circle.layer.borderWidth = 1
             label.text = ""

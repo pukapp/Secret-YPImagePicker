@@ -12,6 +12,7 @@ import Photos
 
 protocol ImagePickerDelegate: AnyObject {
     func noPhotos()
+    func didFinishPicking(proceedItems: [YPMediaItem], isOriginal: Bool, completion: (() -> Void)?)
 }
 
 public class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
@@ -30,18 +31,21 @@ public class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
     }
     
     /// Private callbacks to YPImagePicker
-    public var didClose:(() -> Void)?
+    public var didClose:(((() -> Void)?) -> Void)?
     public var didSelectItems: (([YPMediaItem]) -> Void)?
     
     enum Mode {
         case library
         case camera
         case video
+        case secretLibrary
     }
     
     private var libraryVC: YPLibraryVC?
     private var cameraVC: YPCameraVC?
     private var videoVC: YPVideoCaptureVC?
+    private var selibraryVC: SELibraryVC?
+    private var selibraryAlbumVC: YPAlbumVC?
     
     var mode = Mode.camera
     
@@ -88,6 +92,12 @@ public class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
             }
         }
         
+        // SecretLibrary
+        if YPConfig.screens.contains(.secretLibrary) {
+            selibraryVC = SELibraryVC()
+            selibraryVC?.delegate = self
+        }
+        
         // Show screens
         var vcs = [UIViewController]()
         for screen in YPConfig.screens {
@@ -104,6 +114,23 @@ public class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
                 if let videoVC = videoVC {
                     vcs.append(videoVC)
                 }
+            case .secretLibrary:
+                if let selibraryVC = selibraryVC {
+                    selibraryAlbumVC = YPAlbumVC(albumsManager: albumsManager)
+                    let navVC = UINavigationController(rootViewController: selibraryAlbumVC!)
+                    navVC.navigationBar.isHidden = true
+                    selibraryAlbumVC!.didSelectAlbum = { [weak self, weak selibraryVC] album in
+                        guard let self = self, let selibraryVC = selibraryVC else { return }
+                        selibraryVC.setAlbum(album)
+                        self.navigationItem.title = album.title
+                        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: YPConfig.icons.backButtonIcon, style: .done, target: self, action: #selector(self.popToAlbumList))
+                        selibraryVC.refreshMediaRequest()
+                        navVC.pushViewController(selibraryVC, animated: true)
+                    }
+                    navVC.viewControllers.append(selibraryVC)
+                    
+                    vcs = [navVC]
+                }
             }
         }
         controllers = vcs
@@ -117,6 +144,8 @@ public class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
                 mode = .camera
             case .video:
                 mode = .video
+            case .secretLibrary:
+                mode = .secretLibrary
             }
         }
         
@@ -155,6 +184,8 @@ public class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
             return .camera
         case is YPVideoCaptureVC:
             return .video
+        case is UINavigationController:
+            return .secretLibrary
         default:
             return .camera
         }
@@ -177,6 +208,8 @@ public class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
             cameraVC.start()
         } else if let videoVC = vc as? YPVideoCaptureVC {
             videoVC.start()
+        } else if let nav = vc as? UINavigationController, let seVC = nav.viewControllers[1] as? SELibraryVC {
+            seVC.checkPermission()
         }
     
         updateUI()
@@ -190,6 +223,8 @@ public class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
             cameraVC?.stopCamera()
         case .video:
             videoVC?.stopCamera()
+        case .secretLibrary:
+            break
         }
     }
     
@@ -298,7 +333,21 @@ public class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
             navigationItem.titleView = nil
             title = videoVC?.title
             navigationItem.rightBarButtonItem = nil
+        case .secretLibrary:
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: YPConfig.wordings.cancel,
+                                                               style: .plain,
+                                                               target: self,
+                                                               action: #selector(close))
+            navigationItem.titleView = nil
+            title = YPConfig.wordings.allPhotos
+            navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: YPConfig.icons.backButtonIcon, style: .done, target: self, action: #selector(popToAlbumList))
         }
+    }
+    
+    @objc
+    func popToAlbumList() {
+        navigationItem.leftBarButtonItem = nil
+        selibraryVC!.navigationController?.popViewController(animated: true)
     }
     
     @objc
@@ -307,7 +356,9 @@ public class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
         if let libraryVC = libraryVC {
             libraryVC.mediaManager.forseCancelExporting()
         }
-        self.didClose?()
+        self.didClose?({
+            self.dellocSElibraryAndAlbumVC()
+        })
     }
     
     // When pressing "Next"
@@ -371,5 +422,21 @@ extension YPPickerVC: YPLibraryViewDelegate {
         self.dismiss(animated: true) {
             self.imagePickerDelegate?.noPhotos()
         }
+    }
+    
+    ///由于相册弹出的方式，所以这里需要主动打破循环才能释放
+    private func dellocSElibraryAndAlbumVC() {
+        if self.selibraryAlbumVC != nil {
+            self.selibraryAlbumVC?.navigationController?.viewControllers.removeAll()
+            self.selibraryAlbumVC = nil
+        }
+    }
+}
+
+extension YPPickerVC: SELibraryVCDelegate {
+    func didFinishPicking(proceedItems: [YPMediaItem], isOriginal: Bool) {
+        self.imagePickerDelegate?.didFinishPicking(proceedItems: proceedItems, isOriginal: isOriginal, completion: {
+            self.dellocSElibraryAndAlbumVC()
+        })
     }
 }

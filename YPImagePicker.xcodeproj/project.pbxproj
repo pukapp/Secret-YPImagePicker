@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		731D8DC62310E4640035D107 /* SELibraryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731D8DC52310E4640035D107 /* SELibraryVC.swift */; };
+		731D8DC82310E4820035D107 /* SELibraryVC+CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731D8DC72310E4820035D107 /* SELibraryVC+CollectionView.swift */; };
 		73F9E613224094E6000FBEEF /* Stevia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73F9E611224094E6000FBEEF /* Stevia.framework */; };
 		73F9E614224094E6000FBEEF /* PryntTrimmerView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73F9E612224094E6000FBEEF /* PryntTrimmerView.framework */; };
 		8458057421819B95004F241C /* YPImagePickerLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 99C6D6991F1FB5C100711DB2 /* YPImagePickerLocalizable.strings */; };
@@ -104,6 +106,8 @@
 		5F01F9DC20DCC494007432E4 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/YPImagePickerLocalizable.strings"; sourceTree = "<group>"; };
 		65BBCBAE2101BA4200277809 /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/YPImagePickerLocalizable.strings; sourceTree = "<group>"; };
 		7157B4CA206FD7270004EF6C /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/YPImagePickerLocalizable.strings"; sourceTree = "<group>"; };
+		731D8DC52310E4640035D107 /* SELibraryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SELibraryVC.swift; sourceTree = "<group>"; };
+		731D8DC72310E4820035D107 /* SELibraryVC+CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SELibraryVC+CollectionView.swift"; sourceTree = "<group>"; };
 		73F9E611224094E6000FBEEF /* Stevia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stevia.framework; path = Carthage/Build/iOS/Stevia.framework; sourceTree = "<group>"; };
 		73F9E612224094E6000FBEEF /* PryntTrimmerView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PryntTrimmerView.framework; path = Carthage/Build/iOS/PryntTrimmerView.framework; sourceTree = "<group>"; };
 		99019E4B2018CCD6007325C2 /* YPBottomPagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YPBottomPagerView.swift; sourceTree = "<group>"; };
@@ -234,6 +238,15 @@
 				52412A931CA6114A0073C4BE /* YPImagePicker.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		731D8DC42310E4230035D107 /* Gallery-Secret */ = {
+			isa = PBXGroup;
+			children = (
+				731D8DC52310E4640035D107 /* SELibraryVC.swift */,
+				731D8DC72310E4820035D107 /* SELibraryVC+CollectionView.swift */,
+			);
+			path = "Gallery-Secret";
 			sourceTree = "<group>";
 		};
 		99019E4A2018CCB8007325C2 /* BottomPager */ = {
@@ -436,6 +449,7 @@
 		EB65C4B3209281A10037858B /* Pages */ = {
 			isa = PBXGroup;
 			children = (
+				731D8DC42310E4230035D107 /* Gallery-Secret */,
 				99C6D69E1F1FB5C100711DB2 /* Gallery */,
 				99C6D6A61F1FB5C100711DB2 /* Photo */,
 				99C6D6B61F1FB5C100711DB2 /* Video */,
@@ -519,6 +533,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				fr,
 				es,
@@ -598,6 +613,7 @@
 				99C6D6C51F1FB5C100711DB2 /* YPFilterCollectionViewCell.swift in Sources */,
 				990FD295201B3E59002A39A1 /* YPDragDirection.swift in Sources */,
 				99278DAE205140F60059532E /* YPPermissionDeniedPopup.swift in Sources */,
+				731D8DC62310E4640035D107 /* SELibraryVC.swift in Sources */,
 				99CF6D21201B70A000487F77 /* YPLibraryVC+CollectionView.swift in Sources */,
 				99CF6D1B201B6A5C00487F77 /* UICollectionView+Extensions.swift in Sources */,
 				99C6D6C11F1FB5C100711DB2 /* YPAssetViewContainer.swift in Sources */,
@@ -659,6 +675,7 @@
 				99019E4E2018CD31007325C2 /* YPPagerMenu.swift in Sources */,
 				99C6D6C01F1FB5C100711DB2 /* YPAssetZoomableView.swift in Sources */,
 				EB867BCF209134F100332A54 /* UIColor+Extensions.swift in Sources */,
+				731D8DC82310E4820035D107 /* SELibraryVC+CollectionView.swift in Sources */,
 				EBD66107208104F400EA276E /* YPColors.swift in Sources */,
 				99A052A11F20B49B005600B3 /* YPAlbum.swift in Sources */,
 				EBE6CA48210389ED005B0A6A /* CIImage+Extensions.swift in Sources */,

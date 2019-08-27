@@ -29,6 +29,10 @@ class YPAlbumVC: UIViewController {
         title = YPConfig.wordings.albumsTitle
     }
     
+    deinit {
+        debugPrint("secret:ios===YPAlbumVC释放了")
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

@@ -65,7 +65,7 @@ class LibraryMediaManager {
         }
     }
     
-    func fetchVideoUrlAndCrop(for videoAsset: PHAsset, cropRect: CGRect, callback: @escaping (URL) -> Void, callError: @escaping (Error?) -> Void) {
+    func fetchVideoUrlAndCrop(for videoAsset: PHAsset, cropRect: CGRect?, callback: @escaping (URL) -> Void, callError: @escaping (Error?) -> Void) {
         let videosOptions = PHVideoRequestOptions()
         videosOptions.isNetworkAccessAllowed = true
         imageManager?.requestAVAsset(forVideo: videoAsset, options: videosOptions) { asset, _, _ in
@@ -100,26 +100,30 @@ class LibraryMediaManager {
                 mainInstructions.timeRange = trackTimeRange
                 
                 // 3. Adding the layer instructions. Transforming
-                
-                let layerInstructions = AVMutableVideoCompositionLayerInstruction(assetTrack: videoCompositionTrack)
-                layerInstructions.setTransform(videoTrack.getTransform(cropRect: cropRect), at: CMTime.zero)
-                layerInstructions.setOpacity(1.0, at: CMTime.zero)
-                mainInstructions.layerInstructions = [layerInstructions]
+                if let cropRect = cropRect {
+                    let layerInstructions = AVMutableVideoCompositionLayerInstruction(assetTrack: videoCompositionTrack)
+                    layerInstructions.setTransform(videoTrack.getTransform(cropRect: cropRect), at: CMTime.zero)
+                    layerInstructions.setOpacity(1.0, at: CMTime.zero)
+                    mainInstructions.layerInstructions = [layerInstructions]
+                }
                 
                 // 4. Create the main composition and add the instructions
-                
-                let videoComposition = AVMutableVideoComposition()
-                videoComposition.renderSize = cropRect.size
-                videoComposition.instructions = [mainInstructions]
-                videoComposition.frameDuration = CMTimeMake(value: 1, timescale: 30)
-                
+                var videoComposition: AVMutableVideoComposition?
+                if let cropRect = cropRect {
+                    videoComposition = AVMutableVideoComposition()
+                    videoComposition!.renderSize = cropRect.size
+                    videoComposition!.instructions = [mainInstructions]
+                    videoComposition!.frameDuration = CMTimeMake(value: 1, timescale: 30)
+                }
                 // 5. Configuring export session
                 
                 let exportSession = AVAssetExportSession(asset: assetComposition,
                                                          presetName: YPConfig.video.compression)
                 exportSession?.outputFileType = YPConfig.video.fileType
                 exportSession?.shouldOptimizeForNetworkUse = true
-                exportSession?.videoComposition = videoComposition
+                if let videoComposition = videoComposition {
+                    exportSession?.videoComposition = videoComposition
+                }
                 exportSession?.outputURL = URL(fileURLWithPath: NSTemporaryDirectory())
                     .appendingUniquePathComponent(pathExtension: YPConfig.video.fileType.fileExtension)
                 

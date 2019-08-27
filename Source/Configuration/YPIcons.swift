@@ -26,4 +26,7 @@ public struct YPIcons {
     public var captureVideoImage: UIImage = imageFromBundle("wr_iconCapture")
     public var captureVideoOnImage: UIImage = imageFromBundle("yp_iconVideoCaptureRecording")
     public var playImage: UIImage = imageFromBundle("yp_play")
+    
+    public var setOriginal_normal: UIImage = imageFromBundle("setOriginal_normal")
+    public var setOriginal_selected: UIImage = imageFromBundle("setOriginal_selected")
 }
