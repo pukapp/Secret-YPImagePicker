@@ -98,8 +98,14 @@ class SELibraryVC: UIViewController {
             
             switch asset.mediaType {
             case .image:
-                mediaManager.imageManager?.fetch(photo: asset, callback: { (image, isFromCloud) in
-                    let photo = YPMediaPhoto(image: image, exifMeta: nil, asset: asset)
+                mediaManager.imageManager?.fetchData(photo: asset, callback: { (imageData) in
+                    guard let data = imageData,
+                        let image = UIImage(data: data) else {
+                        asyncGroup.leave()
+                        return
+                    }
+                    //gif图片只能传递data，否则被转成UIImage类型只是gif的第一帧
+                    let photo = YPMediaPhoto(image: image, exifMeta: nil, asset: asset, data: data)
                     resultMediaItems.append(YPMediaItem.photo(p: photo))
                     asyncGroup.leave()
                 })
