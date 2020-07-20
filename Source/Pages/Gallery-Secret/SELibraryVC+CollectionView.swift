@@ -17,13 +17,19 @@ extension SELibraryVC {
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = self.cellSize()
         layout.scrollDirection = .vertical
-        let rect = CGRect.init(x: 0, y: 0, width: self.view.bounds.width, height: self.bottomToolView.frame.minY)
-        collectionView = UICollectionView(frame: rect, collectionViewLayout: layout)
+        collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .white
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(YPLibraryViewCell.self, forCellWithReuseIdentifier: "YPLibraryViewCell")
         self.view.addSubview(collectionView)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            collectionView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: bottomToolView.topAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor)
+        ])
     }
 
     // MARK: - Library collection view cell managing

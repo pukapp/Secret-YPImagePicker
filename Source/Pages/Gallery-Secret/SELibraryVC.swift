@@ -157,8 +157,24 @@ class SELibraryVC: UIViewController {
         if mediaManager.fetchResult != nil {
             return
         }
-        bottomToolView.frame = CGRect.init(x: 0, y: self.view.bounds.height - UIScreen.navBarHeight - 45, width: self.view.bounds.width, height: 45)
         self.view.addSubview(bottomToolView)
+        bottomToolView.translatesAutoresizingMaskIntoConstraints = false
+        if #available(iOS 11.0, *) {
+            NSLayoutConstraint.activate([
+                bottomToolView.leftAnchor.constraint(equalTo: view.leftAnchor),
+                bottomToolView.rightAnchor.constraint(equalTo: view.rightAnchor),
+                bottomToolView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                bottomToolView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -45)
+            ])
+        } else {
+            // Fallback on earlier versions
+            NSLayoutConstraint.activate([
+                bottomToolView.leftAnchor.constraint(equalTo: view.leftAnchor),
+                bottomToolView.rightAnchor.constraint(equalTo: view.rightAnchor),
+                bottomToolView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                bottomToolView.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -45)
+            ])
+        }
         
         setupCollectionView()
         refreshMediaRequest()
