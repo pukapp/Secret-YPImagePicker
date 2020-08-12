@@ -26,6 +26,7 @@ DerivedData
 .bundle
 
 # Carthage
+Carthage/
 Carthage/Build/tvOS/
 Carthage/Checkouts
 Carthage/Build/iOS/*.dSYM
