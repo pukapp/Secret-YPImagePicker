@@ -60,7 +60,45 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
         panGestureHelper.registerForPanGesture(on: v)
         registerForTapOnPreview()
         refreshMediaRequest()
-
+        
+        ///加载前先判断是否存在已选择，存在则添加到选中数据源中
+        var isChooseVideo = false
+        if let items = YPImagePickerConfiguration.shared.library.selectedAssetIdentifiers, items.count > 0 {
+            for iden in items {
+                for index in 0...(mediaManager.fetchResult.count-1) {
+                    let asset = mediaManager.fetchResult[index]
+                    if iden == asset.localIdentifier {
+                        if asset.mediaType == .video {
+                            ///由于视频只是单选，所以这里判断有视频就直接跳出循环，并且选中当前视频asset
+                            isChooseVideo = true
+                            currentlySelectedIndex = index
+                            changeAsset(asset)
+                            v.collectionView.selectItem(at: IndexPath(row: index, section: 0),
+                                                        animated: false,
+                                                        scrollPosition: UICollectionView.ScrollPosition())
+                            break
+                        } else {
+                            if selection.count == 0 {
+                                changeAsset(asset)
+                                v.collectionView.selectItem(at: IndexPath(row: index, section: 0),
+                                                            animated: false,
+                                                            scrollPosition: UICollectionView.ScrollPosition())
+                            }
+                             self.addToSelection(indexPath: IndexPath.init(row: index, section: 0), isSelected: true)
+                        }
+                    }
+                }
+            }
+            if selection.count > 0 && !isChooseVideo {
+                currentlySelectedIndex = selection.first!.index
+                multipleSelectionEnabled = true
+                v.assetViewContainer.setMultipleSelectionMode(on: multipleSelectionEnabled)
+            }
+        }
+        if !multipleSelectionEnabled && !isChooseVideo {
+            addToSelection(indexPath: IndexPath(row: 0, section: 0), isSelected: false)
+        }
+        
         v.assetViewContainer.multipleSelectionButton.isHidden = !(YPConfig.library.maxNumberOfItems > 1)
         v.maxNumberWarningLabel.text = String(format: YPConfig.wordings.warningMaxItemsLimit,
 											  YPConfig.library.maxNumberOfItems)
@@ -157,13 +195,16 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
 
     @objc
     func multipleSelectionButtonTapped() {
-        doAfterPermissionCheck { [weak self] in
-            if let self = self {
-                if !self.multipleSelectionEnabled {
-                    self.selection.removeAll()
-                }
-                self.showMultipleSelection()
-            }
+        let asset = mediaManager.fetchResult[currentlySelectedIndex]
+        ///只要不是图片类型，就不允许多选
+        guard case .image = asset.mediaType else {
+            let alert = YPAlert.videoChooseAmountLimit(self.view)
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
+        
+        if !multipleSelectionEnabled {
+            selection.removeAll()
         }
     }
     
@@ -177,21 +218,20 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
         multipleSelectionEnabled = !multipleSelectionEnabled
         
         if multipleSelectionEnabled {
-            if selection.isEmpty && YPConfig.library.preSelectItemOnMultipleSelection,
-				delegate?.libraryViewShouldAddToSelection(indexPath: IndexPath(row: currentlySelectedIndex, section: 0),
-														  numSelections: selection.count) ?? true {
-                let asset = mediaManager.fetchResult[currentlySelectedIndex]
+            if selection.isEmpty {
                 selection = [
                     YPLibrarySelection(index: currentlySelectedIndex,
                                        cropRect: v.currentCropRect(),
                                        scrollViewContentOffset: v.assetZoomableView!.contentOffset,
                                        scrollViewZoomScale: v.assetZoomableView!.zoomScale,
-                                       assetIdentifier: asset.localIdentifier)
+                                       assetIdentifier: asset.localIdentifier,
+                                       mediaType: asset.mediaType,
+                                       isSelected: true)
                 ]
             }
         } else {
             selection.removeAll()
-            addToSelection(indexPath: IndexPath(row: currentlySelectedIndex, section: 0))
+            addToSelection(indexPath: IndexPath(row: currentlySelectedIndex, section: 0), isSelected: false)
         }
         
         v.assetViewContainer.setMultipleSelectionMode(on: multipleSelectionEnabled)
@@ -280,9 +320,6 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
             v.collectionView.selectItem(at: IndexPath(row: 0, section: 0),
                                              animated: false,
                                              scrollPosition: UICollectionView.ScrollPosition())
-            if !multipleSelectionEnabled {
-                addToSelection(indexPath: IndexPath(row: 0, section: 0))
-            }
         } else {
             delegate?.noPhotosForOptions()
         }
@@ -361,16 +398,24 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
             return true
         }
         
-        let tooLong = floor(asset.duration) > YPConfig.video.libraryTimeLimit
-        let tooShort = floor(asset.duration) < YPConfig.video.minimumTimeLimit
+        //let tooLong = asset.duration > YPConfig.video.libraryTimeLimit
+        let tooShort = asset.duration < YPConfig.video.minimumTimeLimit
         
-        if tooLong || tooShort {
+//        if tooLong || tooShort {
+//            DispatchQueue.main.async {
+//                let alert = tooLong ? YPAlert.videoTooLongAlert(self.view) : YPAlert.videoTooShortAlert(self.view)
+//                self.present(alert, animated: true, completion: nil)
+//            }
+//            return false
+//        }
+        ///长度大了不判断，可以到下个界面剪辑
+        if tooShort {
             DispatchQueue.main.async {
-                let alert = tooLong ? YPAlert.videoTooLongAlert(self.view) : YPAlert.videoTooShortAlert(self.view)
-                self.present(alert, animated: true, completion: nil)
+                self.present(YPAlert.videoTooShortAlert(self.view), animated: true, completion: nil)
             }
             return false
         }
+
         
         return true
     }
@@ -424,30 +469,21 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
         mediaManager.imageManager?.fetchImage(for: asset, cropRect: cropRect, targetSize: ts, callback: callback)
     }
     
-    private func fetchVideoAndApplySettings(for asset: PHAsset,
-                                            withCropRect rect: CGRect? = nil,
-                                            callback: @escaping (_ videoURL: URL?) -> Void) {
-        let normalizedCropRect = rect ?? DispatchQueue.main.sync { v.currentCropRect() }
-        let ts = targetSize(for: asset, cropRect: normalizedCropRect)
-        let xCrop: CGFloat = normalizedCropRect.origin.x * CGFloat(asset.pixelWidth)
-        let yCrop: CGFloat = normalizedCropRect.origin.y * CGFloat(asset.pixelHeight)
-        let resultCropRect = CGRect(x: xCrop,
-                                    y: yCrop,
-                                    width: ts.width,
-                                    height: ts.height)
-        
-        guard fitsVideoLengthLimits(asset: asset) else {
-            return
-        }
-        
-        if YPConfig.video.automaticTrimToTrimmerMaxDuration {
-            fetchVideoAndCropWithDuration(for: asset,
-                                          withCropRect: resultCropRect,
-                                          duration: YPConfig.video.trimmerMaxDuration,
-                                          callback: callback)
-        } else {
-            delegate?.libraryViewDidTapNext()
-            mediaManager.fetchVideoUrlAndCrop(for: asset, cropRect: resultCropRect, callback: callback)
+    private func checkVideoLengthAndCrop(for asset: PHAsset,
+                                         withCropRect: CGRect? = nil,
+                                         callback: @escaping (_ videoURL: URL) -> Void,
+                                         callError: @escaping (Error?) -> Void) {
+        if fitsVideoLengthLimits(asset: asset) == true {
+            delegate?.libraryViewStartedLoading()
+            let normalizedCropRect = withCropRect ?? DispatchQueue.main.sync { v.currentCropRect() }
+            let ts = targetSize(for: asset, cropRect: normalizedCropRect)
+            let xCrop: CGFloat = normalizedCropRect.origin.x * CGFloat(asset.pixelWidth)
+            let yCrop: CGFloat = normalizedCropRect.origin.y * CGFloat(asset.pixelHeight)
+            let resultCropRect = CGRect(x: xCrop,
+                                        y: yCrop,
+                                        width: ts.width,
+                                        height: ts.height)
+            mediaManager.fetchVideoUrlAndCrop(for: asset, cropRect: resultCropRect, callback: callback, callError: callError)
         }
     }
     
@@ -501,17 +537,21 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
                         }
                         
                     case .video:
-                        self.fetchVideoAndApplySettings(for: asset.asset,
-                                                             withCropRect: asset.cropRect) { videoURL in
-                            if let videoURL = videoURL {
-                                let videoItem = YPMediaVideo(thumbnail: thumbnailFromVideoPath(videoURL),
-                                                             videoURL: videoURL, asset: asset.asset)
-                                resultMediaItems.append(YPMediaItem.video(v: videoItem))
-                            } else {
-                                print("YPLibraryVC -> selectedMedia -> Problems with fetching videoURL.")
-                            }
+                        self.checkVideoLengthAndCrop(for: asset.asset, withCropRect: asset.cropRect, callback: { videoURL in
+                            let videoItem = YPMediaVideo(thumbnail: thumbnailFromVideoPath(videoURL),
+                                                         videoURL: videoURL,
+                                                         naturalSize: naturalSizeFormVideoPath(videoURL),
+                                                         duration: durationFormVideoPath(videoURL),
+                                                         asset: asset.asset)
+                            resultMediaItems.append(YPMediaItem.video(v: videoItem))
                             asyncGroup.leave()
-                        }
+                        }, callError: { error in
+                            DispatchQueue.main.async {
+                                self.delegate?.libraryViewFinishedLoading()
+                                let alert = YPAlert.badvideoChoose(self.view)
+                                self.present(alert, animated: true, completion: nil)
+                            }
+                        })
                     default:
                         break
                     }
@@ -529,14 +569,19 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
                 case .video:
                     self.fetchVideoAndApplySettings(for: asset, callback: { videoURL in
                         DispatchQueue.main.async {
-                            if let videoURL = videoURL {
-                                self.delegate?.libraryViewFinishedLoading()
-                                let video = YPMediaVideo(thumbnail: thumbnailFromVideoPath(videoURL),
-                                                         videoURL: videoURL, asset: asset)
-                                videoCallback(video)
-                            } else {
-                                print("YPLibraryVC -> selectedMedia -> Problems with fetching videoURL.")
-                            }
+                            self.delegate?.libraryViewFinishedLoading()
+                            let video = YPMediaVideo(thumbnail: thumbnailFromVideoPath(videoURL),
+                                                     videoURL: videoURL,
+                                                     naturalSize: naturalSizeFormVideoPath(videoURL),
+                                                     duration: durationFormVideoPath(videoURL),
+                                                     asset: asset)
+                            videoCallback(video)
+                        }
+                    }, callError: { error in
+                        DispatchQueue.main.async {
+                            self.delegate?.libraryViewFinishedLoading()
+                            let alert = YPAlert.badvideoChoose(self.view)
+                            self.present(alert, animated: true, completion: nil)
                         }
                     })
                 case .image:
@@ -577,6 +622,7 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
     // MARK: - Deinit
     
     deinit {
+        debugPrint("secret:ios===YPLibraryVC释放了")
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
 }

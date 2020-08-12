@@ -34,6 +34,22 @@ func thumbnailFromVideoPath(_ path: URL) -> UIImage {
     return UIImage()
 }
 
+func naturalSizeFormVideoPath(_ path: URL) -> String {
+    let asset = AVURLAsset(url: path, options: nil)
+    let tracks = asset.tracks(withMediaType: AVMediaType.video)
+    var naturalSize = "320x240"
+    if naturalSize.count > 0 {
+        naturalSize = "\(Int(tracks.first!.naturalSize.width))" + "x" + "\(Int(tracks.first!.naturalSize.height))"
+    }
+    return naturalSize
+}
+
+func durationFormVideoPath(_ path: URL) -> TimeInterval {
+    let asset = AVURLAsset(url: path, options: nil)
+    let second = CMTimeGetSeconds(asset.duration)
+    return second
+}
+
 func setFocusPointOnDevice(device: AVCaptureDevice, point: CGPoint) {
     do {
         try device.lockForConfiguration()

@@ -63,4 +63,15 @@ extension AVAsset {
 
         return exportSession
     }
+    
+    func getVideoNaturalSize() -> String {
+        ///获取视频狂宽高
+        let tracks = self.tracks(withMediaType: AVMediaType.video)
+        var naturalSize = "320x240"
+        if naturalSize.count > 0 {
+            naturalSize = "\(Int(tracks.first!.naturalSize.width))" + "x" + "\(Int(tracks.first!.naturalSize.height))"
+        }
+        return naturalSize
+    }
+    
 }

@@ -39,13 +39,36 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
     fileprivate var v = YPFiltersView()
 
     override open var prefersStatusBarHidden: Bool { return YPConfig.hidesStatusBar }
-    override open func loadView() { view = v }
     required public init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
+    fileprivate let navigationView = UIView()
+    fileprivate var rightDoneBtn = UIButton()
+    fileprivate lazy var activityIndicator: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView(style: .gray)
+        spinner.color = YPConfig.colors.navigationBarActivityIndicatorColor
+        navigationView.addSubview(spinner)
+        spinner.bounds = CGRect.init(x: 0, y: 0, width: 15, height: 15)
+        spinner.center = CGPoint.init(x: navigationView.frame.size.width - 30 , y: navigationView.frame.size.height - 20)
+        spinner.hidesWhenStopped = true
+        return spinner
+    }()
+    
     // MARK: - Life Cycle ♻️
-
+    override open func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    override open func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
     override open func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.addSubview(v)
+        v.frame = CGRect.init(x: 0, y: UIScreen.navBarHeight, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - UIScreen.navBarHeight)
         
         // Setup of main image an thumbnail images
         v.imageView.image = inputPhoto.image
@@ -87,6 +110,9 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
         }
         setupRightBarButton()
         
+        // Custom of Navigation Bar
+        setupCustomBarButton()
+        
         YPHelper.changeBackButtonIcon(self)
         YPHelper.changeBackButtonTitle(self)
         
@@ -100,17 +126,71 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
     }
     
     // MARK: Setup - ⚙️
-    
-    fileprivate func setupRightBarButton() {
+    // 这里采用自定义的是因为这里会出现一个bug，当图库点击下一步的时候，导航bar不会改变。此bug无法定位的根源，所以这里先采用自定义的方式
+    fileprivate func setupCustomBarButton() {
+        navigationView.backgroundColor = .white
+        self.view.addSubview(navigationView)
+        navigationView.frame = CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.navBarHeight)
+        
+        let titleLabel = UILabel.init()
+        titleLabel.textColor = .black
+        titleLabel.textAlignment = .center
+        titleLabel.text = YPConfig.wordings.filter
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        navigationView.addSubview(titleLabel)
+        titleLabel.center = CGPoint.init(x: navigationView.frame.size.width/2.0, y: navigationView.frame.size.height - 20)
+        titleLabel.bounds = CGRect.init(x: 0, y: 0, width: 100, height: 20)
+        
         let rightBarButtonTitle = isFromSelectionVC ? YPConfig.wordings.done : YPConfig.wordings.next
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: rightBarButtonTitle,
-                                                            style: .done,
-                                                            target: self,
-                                                            action: #selector(save))
-        navigationItem.rightBarButtonItem?.tintColor = YPConfig.colors.tintColor
-        navigationItem.rightBarButtonItem?.setFont(font: YPConfig.fonts.rightBarButtonFont, forState: .normal)
+//<<<<<<< HEAD
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: rightBarButtonTitle,
+//                                                            style: .done,
+//                                                            target: self,
+//                                                            action: #selector(save))
+//        navigationItem.rightBarButtonItem?.tintColor = YPConfig.colors.tintColor
+//        navigationItem.rightBarButtonItem?.setFont(font: YPConfig.fonts.rightBarButtonFont, forState: .normal)
+//=======
+        rightDoneBtn = UIButton.init()
+        rightDoneBtn.setTitle(rightBarButtonTitle, for: .normal)
+        rightDoneBtn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        rightDoneBtn.setTitleColor(YPConfig.colors.tintColor, for: .normal)
+        rightDoneBtn.addTarget(self, action: #selector(save), for: .touchUpInside)
+        rightDoneBtn.bounds = CGRect.init(x: 0, y: 0, width: 80, height: 25)
+        rightDoneBtn.contentHorizontalAlignment = .right
+        rightDoneBtn.center = CGPoint.init(x: UIScreen.main.bounds.width - 10 - 40, y: navigationView.frame.size.height - 20)
+        navigationView.addSubview(rightDoneBtn)
+        
+        if isFromSelectionVC {
+            let cancelBtn = UIButton.init()
+            cancelBtn.setTitle(YPConfig.wordings.cancel, for: .normal)
+            cancelBtn.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+            cancelBtn.setTitleColor(YPConfig.colors.tintColor, for: .normal)
+            cancelBtn.addTarget(self, action: #selector(cancel), for: .touchUpInside)
+            cancelBtn.bounds = CGRect.init(x: 0, y: 0, width: 80, height: 20)
+            cancelBtn.center = CGPoint.init(x: navigationView.frame.minX + 10 + 40, y: titleLabel.center.y)
+            cancelBtn.contentHorizontalAlignment = .left
+            navigationView.addSubview(cancelBtn)
+        } else {
+            let popBtn = UIButton.init()
+            popBtn.setImage(YPIcons().backButtonIcon, for: .normal)
+            popBtn.addTarget(self, action: #selector(pop), for: .touchUpInside)
+            popBtn.bounds = CGRect.init(x: 0, y: 0, width: 60, height: 20)
+            popBtn.center = CGPoint.init(x: navigationView.frame.minX + 13 + 30, y: titleLabel.center.y)
+            popBtn.contentHorizontalAlignment = .left
+            navigationView.addSubview(popBtn)
+        }
+//>>>>>>> secret
     }
     
+    func dealProcess(isStart: Bool) {
+        self.rightDoneBtn.isHidden = isStart
+        if isStart {
+            self.activityIndicator.startAnimating()
+        } else {
+            self.activityIndicator.stopAnimating()
+        }
+    }
+
     // MARK: - Methods 🏓
 
     @objc
@@ -145,9 +225,14 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
     }
     
     @objc
+    func pop() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    @objc
     func save() {
         guard let didSave = didSave else { return print("Don't have saveCallback") }
-        self.navigationItem.rightBarButtonItem = YPLoaders.defaultLoader
+        self.dealProcess(isStart: true)
 
         DispatchQueue.global().async {
             if let f = self.selectedFilter,
@@ -159,8 +244,8 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
                 self.inputPhoto.modifiedImage = nil
             }
             DispatchQueue.main.async {
+                self.dealProcess(isStart: false)
                 didSave(YPMediaItem.photo(p: self.inputPhoto))
-                self.setupRightBarButton()
             }
         }
     }

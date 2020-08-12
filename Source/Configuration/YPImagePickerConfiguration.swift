@@ -173,7 +173,6 @@ public struct YPImagePickerConfiguration {
     
     @available(iOS, obsoleted: 3.0.0, renamed: "library.maxNumberOfItems")
     public var maxNumberOfItems = 1
-    
 }
 
 /// Encapsulates library specific settings.
@@ -220,6 +219,9 @@ public struct YPConfigLibrary {
     
     /// Set the overlay type shown on top of the selected library item
     public var itemOverlayType: YPItemOverlayType = .grid
+    
+    ///新增一个从外面传入的选中的照片标识属性，当此属性存在时，需要显示已选择的状态
+    public var selectedAssetIdentifiers: [String]?
 }
 
 /// Encapsulates video specific settings.
@@ -239,16 +241,16 @@ public struct YPConfigVideo {
      */
     public var compression: String = AVAssetExportPresetHighestQuality
     
-    /// Choose the result video extension if you trim or compress a video. Defaults to mov.
-    public var fileType: AVFileType = .mov
+    /// Choose the result video extension if you trim or compress a video. Defaults to mp4.
+    public var fileType: AVFileType = .mp4
     
     /// Defines the time limit for recording videos.
     /// Default is 60 seconds.
-    public var recordingTimeLimit: TimeInterval = 60.0
+    public var recordingTimeLimit: TimeInterval = 20.0
     
     /// Defines the time limit for videos from the library.
     /// Defaults to 60 seconds.
-    public var libraryTimeLimit: TimeInterval = 60.0
+    public var libraryTimeLimit: TimeInterval = 20.0
     
     /// Defines the minimum time for the video
     /// Defaults to 3 seconds.
@@ -256,7 +258,7 @@ public struct YPConfigVideo {
     
     /// The maximum duration allowed for the trimming. Change it before setting the asset, as the asset preview
     /// - Tag: trimmerMaxDuration
-    public var trimmerMaxDuration: Double = 60.0
+    public var trimmerMaxDuration: Double = 20.0
     
     /// The minimum duration allowed for the trimming.
     /// The handles won't pan further if the minimum duration is attained.

@@ -84,17 +84,17 @@ extension YPLibraryVC {
     }
     
     /// Adds cell to selection
-    func addToSelection(indexPath: IndexPath) {
-        if !(delegate?.libraryViewShouldAddToSelection(indexPath: indexPath, numSelections: selection.count) ?? true) {
-            return
-        }
-        
+    ///新增isSelected 来判断当前是否是选择状态。
+    func addToSelection(indexPath: IndexPath, isSelected: Bool) {
         let asset = mediaManager.fetchResult[indexPath.item]
         selection.append(
             YPLibrarySelection(
                 index: indexPath.row,
-                assetIdentifier: asset.localIdentifier
+                assetIdentifier: asset.localIdentifier,
+                mediaType: asset.mediaType,
+                isSelected: isSelected
             )
+            
         )
         checkLimit()
     }
@@ -107,7 +107,13 @@ extension YPLibraryVC {
     
     /// Checks if there can be selected more items. If no - present warning.
     func checkLimit() {
+        v.maxNumberWarningLabel.text = String(format: YPConfig.wordings.warningMaxItemsLimit, YPConfig.library.maxNumberOfItems)
         v.maxNumberWarningView.isHidden = !isLimitExceeded || multipleSelectionEnabled == false
+    }
+    
+    func chooseErrorType() {
+        v.maxNumberWarningLabel.text = YPConfig.wordings.warningCanChooseOneType
+        v.maxNumberWarningView.isHidden = false
     }
 }
 
@@ -169,9 +175,20 @@ extension YPLibraryVC: UICollectionViewDelegate {
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        /// 目前的选择方式为，图片最多9张，视频最多一个，且不能混选。
+        /// 所以这里视频那里不能选择多选按钮，图片这里进行判断，只要选择了多选按钮，那么就不能选择视频了
+        if multipleSelectionEnabled {
+            guard case .image = mediaManager.fetchResult[indexPath.row].mediaType else {
+                deselect(indexPath: indexPath)
+                collectionView.deselectItem(at: indexPath, animated: false)
+                chooseErrorType()
+                return
+            }
+        }
+ 
         let previouslySelectedIndexPath = IndexPath(row: currentlySelectedIndex, section: 0)
         currentlySelectedIndex = indexPath.row
-
+        
         changeAsset(mediaManager.fetchResult[indexPath.row])
         panGestureHelper.resetToOriginalState()
         
@@ -180,8 +197,9 @@ extension YPLibraryVC: UICollectionViewDelegate {
             collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
         }
         v.refreshImageCurtainAlpha()
-            
+
         if multipleSelectionEnabled {
+            ///这里的设计是选择的item在当前item再点击一次才能取消选中。而不是只要点击选中的item就取消选中。可能与产品需求不一致，记录一下
             let cellIsInTheSelectionPool = isInSelectionPool(indexPath: indexPath)
             let cellIsCurrentlySelected = previouslySelectedIndexPath.row == currentlySelectedIndex
             if cellIsInTheSelectionPool {
@@ -189,20 +207,17 @@ extension YPLibraryVC: UICollectionViewDelegate {
                     deselect(indexPath: indexPath)
                 }
             } else if isLimitExceeded == false {
-                addToSelection(indexPath: indexPath)
+                addToSelection(indexPath: indexPath, isSelected: true)
             }
             collectionView.reloadItems(at: [indexPath])
             collectionView.reloadItems(at: [previouslySelectedIndexPath])
         } else {
             selection.removeAll()
-            addToSelection(indexPath: indexPath)
-            
-            // Force deseletion of previously selected cell.
-            // In the case where the previous cell was loaded from iCloud, a new image was fetched
-            // which triggered photoLibraryDidChange() and reloadItems() which breaks selection.
-            //
-            if let previousCell = collectionView.cellForItem(at: previouslySelectedIndexPath) as? YPLibraryViewCell {
-                previousCell.isSelected = false
+
+            addToSelection(indexPath: indexPath, isSelected: false)
+            if let selectedRow = previouslySelectedIndices.first?.index {
+                let previouslySelectedIndexPath = IndexPath(row: selectedRow, section: 0)
+                collectionView.reloadItems(at: [previouslySelectedIndexPath])
             }
         }
     }

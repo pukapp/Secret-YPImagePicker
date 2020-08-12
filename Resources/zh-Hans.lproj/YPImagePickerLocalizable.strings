@@ -17,6 +17,19 @@
 "YPImagePickerTrim" = "剪辑";
 "YPImagePickerVideo" = "录像";
 "YPImagePickerVideoDurationTitle" = "视频时长";
-"YPImagePickerVideoTooLong" = "视频时长大于 %@ 秒";
-"YPImagePickerVideoTooShort" = "视频时长小于 %@ 秒";
-"YPImagePickerWarningItemsLimit" = "图片或视频的最多可选数量为 %d ";
+"YPImagePickerVideoTooLong" = "视频时长不得多于 %@ 秒";
+"YPImagePickerVideoTooShort" = "视频时长不得少于 %@ 秒";
+"YPImagePickerWarningItemsLimitTitle" = "图片数量限制";
+"YPImagePickerWarningItemsLimit" = "图片的最多可选数量为 %d ";
+
+"YPImagePickerWarningCanChooseOneTypeTitle" = "媒体类型限制";
+"YPImagePickerWarningCanChooseOneType" = "不能同时选择照片和视频";
+
+"YPImagePickerWarningMaxVideoLimitTitle" = "视频数量";
+"YPImagePickerWarningMaxVideoLimitText" = "视频最多可选一个";
+"YPImagePickerWarningBadVideoTitle" = "处理失败";
+"YPImagePickerWarningBadVideoText" = "视频文件已经损坏了";
+
+"YPImagePickerSend" = "发送";
+"YPImagePickerAllPhotos" = "所有照片";
+"YPImagePickerOriginal" = "原图";

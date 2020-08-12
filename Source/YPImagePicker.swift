@@ -13,6 +13,17 @@ import Photos
 public protocol YPImagePickerDelegate: AnyObject {
     func noPhotos()
     func shouldAddToSelection(indexPath: IndexPath, numSelections: Int) -> Bool
+    
+    /**
+    新增代理传回数据 - 此时YPImagePicker的数据回调有两种方式，
+    1、通过闭关_didFinishPicking进行回调，
+    2、通过代理进行回调
+    3、completion的作用是起到代码作用顺序的关键，看YYPickerVC的dellocSElibraryAndAlbumVC方法，
+     是起到释放导航释放vcs的作用，但是与dismiss联合起来用的话，那么必须在dismiss的completion里面，
+     才会起到同时dismiss两个控制器的效果，否则的话，第一个vc会先pop，然后才会dismiss。
+     */
+    func didFinishPicking(proceedItems: [YPMediaItem], isOriginal: Bool, completion: (() -> Void)?)
+    func close(completion: (() -> Void)?)
 }
 
 open class YPImagePicker: UINavigationController {
@@ -35,6 +46,7 @@ open class YPImagePicker: UINavigationController {
     // This keeps the backwards compatibility keeps the api as simple as possible.
     // Multiple selection becomes available as an opt-in.
     private func didSelect(items: [YPMediaItem]) {
+        self.imagePickerDelegate?.didFinishPicking(proceedItems: items, isOriginal: false, completion: nil)
         _didFinishPicking?(items, false)
     }
     
@@ -62,7 +74,8 @@ open class YPImagePicker: UINavigationController {
     
 override open func viewDidLoad() {
         super.viewDidLoad()
-        picker.didClose = { [weak self] in
+        picker.didClose = { [weak self] completion in
+            self?.imagePickerDelegate?.close(completion: completion)
             self?._didFinishPicking?([], true)
         }
         viewControllers = [picker]
@@ -149,7 +162,7 @@ override open func viewDidLoad() {
     }
     
     deinit {
-        print("Picker deinited 👍")
+        debugPrint("secret:ios===Picker deinited 👍")
     }
     
     private func setupLoadingView() {
@@ -169,6 +182,10 @@ extension YPImagePicker: ImagePickerDelegate {
     
     func shouldAddToSelection(indexPath: IndexPath, numSelections: Int) -> Bool {
         return self.imagePickerDelegate?.shouldAddToSelection(indexPath: indexPath, numSelections: numSelections)
-			?? true
+            ?? true
+    }
+    
+    func didFinishPicking(proceedItems: [YPMediaItem], isOriginal: Bool, completion: (() -> Void)?) {
+        self.imagePickerDelegate?.didFinishPicking(proceedItems: proceedItems, isOriginal: isOriginal, completion: completion)
     }
 }

@@ -23,16 +23,18 @@ class YPVideoCaptureHelper: NSObject {
     private let sessionQueue = DispatchQueue(label: "YPVideoVCSerialQueue")
     private var videoInput: AVCaptureDeviceInput?
     private var videoOutput = AVCaptureMovieFileOutput()
-    private var videoRecordingTimeLimit: TimeInterval = 0
+    private var videoRecordingTimeLimit: (min: TimeInterval, max: TimeInterval) = (0, 0)
     private var isCaptureSessionSetup: Bool = false
     private var isPreviewSetup = false
     private var previewView: UIView!
     private var motionManager = CMMotionManager()
     private var initVideoZoomFactor: CGFloat = 1.0
     
+    ///新增录制视频时长短回调
+    public var recordToShort: (() -> Void)?
     // MARK: - Init
     
-    public func start(previewView: UIView, withVideoRecordingLimit: TimeInterval, completion: @escaping () -> Void) {
+    public func start(previewView: UIView, withVideoRecordingLimit: (min: TimeInterval, max: TimeInterval), completion: @escaping () -> Void) {
         self.previewView = previewView
         self.videoRecordingTimeLimit = withVideoRecordingLimit
         sessionQueue.async { [weak self] in
@@ -225,7 +227,7 @@ class YPVideoCaptureHelper: NSObject {
             
             let timeScale: Int32 = 30 // FPS
             let maxDuration =
-                CMTimeMakeWithSeconds(self.videoRecordingTimeLimit, preferredTimescale: timeScale)
+                CMTimeMakeWithSeconds(self.videoRecordingTimeLimit.max, preferredTimescale: timeScale)
             videoOutput.maxRecordedDuration = maxDuration
             videoOutput.minFreeDiskSpaceLimit = 1024 * 1024
             if YPConfig.video.fileType == .mp4 {
@@ -245,7 +247,7 @@ class YPVideoCaptureHelper: NSObject {
     @objc
     func tick() {
         let timeElapsed = Date().timeIntervalSince(dateVideoStarted)
-        let progress: Float = Float(timeElapsed) / Float(videoRecordingTimeLimit)
+        let progress: Float = Float(timeElapsed) / Float(videoRecordingTimeLimit.max)
         DispatchQueue.main.async {
             self.videoRecordingProgress?(progress, timeElapsed)
         }
@@ -295,7 +297,7 @@ extension YPVideoCaptureHelper: AVCaptureFileOutputRecordingDelegate {
     public func fileOutput(_ captureOutput: AVCaptureFileOutput,
                            didStartRecordingTo fileURL: URL,
                            from connections: [AVCaptureConnection]) {
-        timer = Timer.scheduledTimer(timeInterval: 1,
+        timer = Timer.scheduledTimer(timeInterval: 0.5,
                                      target: self,
                                      selector: #selector(tick),
                                      userInfo: nil,
@@ -307,9 +309,15 @@ extension YPVideoCaptureHelper: AVCaptureFileOutputRecordingDelegate {
                            didFinishRecordingTo outputFileURL: URL,
                            from connections: [AVCaptureConnection],
                            error: Error?) {
-        YPVideoProcessor.cropToSquare(filePath: outputFileURL) { [weak self] url in
-            guard let _self = self, let u = url else { return }
-            _self.didCaptureVideo?(u)
+        let timeElapsed = Date().timeIntervalSince(dateVideoStarted)
+        if  timeElapsed < self.videoRecordingTimeLimit.min {///增加录制最小时间限制
+            self.recordToShort?()
+            self.stopRecording()
+        } else {
+            YPVideoProcessor.cropToSquare(filePath: outputFileURL) { [weak self] url in
+                guard let _self = self, let u = url else { return }
+                _self.didCaptureVideo?(u)
+            }
         }
         timer.invalidate()
     }

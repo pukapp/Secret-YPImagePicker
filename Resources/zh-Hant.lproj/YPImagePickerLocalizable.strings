@@ -19,4 +19,11 @@
 "YPImagePickerVideoDurationTitle" = "影片長度";
 "YPImagePickerVideoTooLong" = "影片長度不得超過%@秒";
 "YPImagePickerVideoTooShort" = "影片長度至少需要%@秒以上";
-"YPImagePickerWarningItemsLimit" = "選取的照片及影片總數不得超過%d";
+"YPImagePickerWarningItemsLimit" = "選取的照片總數不得超過%d";
+
+"YPImagePickerWarningCanChooseOneType" = "不能同时選取照片和影片";
+
+"YPImagePickerWarningMaxVideoLimitTitle" = "影片數量";
+"YPImagePickerWarningMaxVideoLimitText" = "影片最多可選一個";
+"YPImagePickerWarningBadVideoTitle" = "處理失敗";
+"YPImagePickerWarningBadVideoText" = "影片文件已經損壞了";

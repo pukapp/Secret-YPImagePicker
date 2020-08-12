@@ -8,8 +8,9 @@
 
 import Foundation
 
-public enum YPPickerScreen {
+public enum YPPickerScreen: Int {
     case library
     case photo
     case video
+    case secretLibrary
 }

@@ -20,7 +20,11 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
     
     @IBOutlet weak var coverImageView: UIImageView!
     @IBOutlet weak var coverThumbSelectorView: ThumbSelectorView!
-
+    ///新增时间范围表示
+    @IBOutlet weak var startTimeLabel: UILabel!
+    @IBOutlet weak var endTimeLabel: UILabel!
+    @IBOutlet weak var totalTimeLabel: UILabel!
+    
     public var inputVideo: YPMediaVideo!
     public var inputAsset: AVAsset { return AVAsset(url: inputVideo.url) }
     
@@ -95,6 +99,13 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
         
         selectTrim()
         videoView.loadVideo(inputVideo)
+        if let endTime = trimmerView?.endTime?.seconds {
+            if endTime > YPConfig.video.trimmerMaxDuration {
+                self.endTimeLabel.text = YPHelper.formattedStrigFrom(YPConfig.video.trimmerMaxDuration)
+            }else {
+                self.endTimeLabel.text = YPHelper.formattedStrigFrom(endTime)
+            }
+        }
 
         super.viewDidAppear(animated)
     }
@@ -127,30 +138,47 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
                 .assetByTrimming(startTime: trimmerView.startTime ?? CMTime.zero,
                                  endTime: trimmerView.endTime ?? inputAsset.duration)
             
+            
+            let duration = self.trimmerView!.endTime!.seconds - self.trimmerView!.startTime!.seconds
+            
             // Looks like file:///private/var/mobile/Containers/Data/Application
             // /FAD486B4-784D-4397-B00C-AD0EFFB45F52/tmp/8A2B410A-BD34-4E3F-8CB5-A548A946C1F1.mov
             let destinationURL = URL(fileURLWithPath: NSTemporaryDirectory())
                 .appendingUniquePathComponent(pathExtension: YPConfig.video.fileType.fileExtension)
             
-            _ = trimmedAsset.export(to: destinationURL) { [weak self] session in
-                switch session.status {
-                case .completed:
-                    DispatchQueue.main.async {
-                        if let coverImage = self?.coverImageView.image {
-                            let resultVideo = YPMediaVideo(thumbnail: coverImage,
-														   videoURL: destinationURL,
-														   asset: self?.inputVideo.asset)
-                            didSave(YPMediaItem.video(v: resultVideo))
-                            self?.setupRightBarButtonItem()
-                        } else {
-                            print("YPVideoFiltersVC -> Don't have coverImage.")
-                        }
-                    }
-                case .failed:
-                    print("YPVideoFiltersVC Export of the video failed. Reason: \(String(describing: session.error))")
-                default:
-                    print("YPVideoFiltersVC Export session completed with \(session.status) status. Not handled")
-                }
+//<<<<<<< HEAD
+//            _ = trimmedAsset.export(to: destinationURL) { [weak self] session in
+//                switch session.status {
+//                case .completed:
+//                    DispatchQueue.main.async {
+//                        if let coverImage = self?.coverImageView.image {
+//                            let resultVideo = YPMediaVideo(thumbnail: coverImage,
+//														   videoURL: destinationURL,
+//														   asset: self?.inputVideo.asset)
+//                            didSave(YPMediaItem.video(v: resultVideo))
+//                            self?.setupRightBarButtonItem()
+//                        } else {
+//                            print("YPVideoFiltersVC -> Don't have coverImage.")
+//                        }
+//                    }
+//                case .failed:
+//                    print("YPVideoFiltersVC Export of the video failed. Reason: \(String(describing: session.error))")
+//                default:
+//                    print("YPVideoFiltersVC Export session completed with \(session.status) status. Not handled")
+//=======
+            try trimmedAsset.export(to: destinationURL) { [weak self] in
+                guard let strongSelf = self else { return }
+                
+                DispatchQueue.main.async {
+                    let resultVideo = YPMediaVideo(thumbnail: strongSelf.coverImageView.image!,
+                                                   videoURL: destinationURL,
+                                                   naturalSize: asset.getVideoNaturalSize(),
+                                                   duration: duration,
+                                                   asset: strongSelf.inputVideo.asset)
+                    didSave(YPMediaItem.video(v: resultVideo))
+                    strongSelf.setupRightBarButtonItem()
+//>>>>>>> secret
+ //               }
             }
         } catch let error {
             print("💩 \(error)")
@@ -260,6 +288,9 @@ extension YPVideoFiltersVC: TrimmerViewDelegate {
     }
     
     public func didChangePositionBar(_ playerTime: CMTime) {
+        self.startTimeLabel.text = YPHelper.formattedStrigFrom(trimmerView?.startTime?.seconds ?? 0)
+        self.endTimeLabel.text = YPHelper.formattedStrigFrom(trimmerView?.endTime?.seconds ?? 0)
+
         stopPlaybackTimeChecker()
         videoView.pause()
         videoView.player.seek(to: playerTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)

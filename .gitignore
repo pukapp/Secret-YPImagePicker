@@ -40,5 +40,8 @@ Carthage/Build/iOS/*.dSYM
 
 Pods/
 
+YPImagePickerExample/Index/
+Index/
+Carthage/
 
 *.lock

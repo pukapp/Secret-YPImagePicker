@@ -19,13 +19,19 @@ public class YPMediaPhoto {
     public let fromCamera: Bool
     public let exifMeta: [String: Any]?
     public var asset: PHAsset?
+    public var data: Data
     
-    public init(image: UIImage, exifMeta: [String: Any]? = nil, fromCamera: Bool = false, asset: PHAsset? = nil) {
+    public init(image: UIImage, exifMeta : [String : Any]? = nil, fromCamera: Bool = false, asset: PHAsset? = nil, data: Data? = nil) {
         self.originalImage = image
         self.modifiedImage = nil
         self.fromCamera = fromCamera
         self.exifMeta = exifMeta
         self.asset = asset
+        if let data = data {
+            self.data = data
+        } else {
+            self.data = image.pngData()!
+        }
     }
 }
 
@@ -35,11 +41,21 @@ public class YPMediaVideo {
     public var url: URL
     public let fromCamera: Bool
     public var asset: PHAsset?
-
-    public init(thumbnail: UIImage, videoURL: URL, fromCamera: Bool = false, asset: PHAsset? = nil) {
+    ///拍摄的时候是宽高一致的
+    public let naturalSize: String
+    public let duration: TimeInterval
+    
+    public init(thumbnail: UIImage,
+                videoURL: URL,
+                fromCamera: Bool = false,
+                naturalSize: String,
+                duration: TimeInterval,
+                asset: PHAsset? = nil) {
         self.thumbnail = thumbnail
         self.url = videoURL
         self.fromCamera = fromCamera
+        self.naturalSize = naturalSize
+        self.duration = duration
         self.asset = asset
     }
 }

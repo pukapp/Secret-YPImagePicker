@@ -8,6 +8,7 @@
 
 import UIKit
 import Photos
+import UIKit
 
 extension PHCachingImageManager {
     
@@ -102,5 +103,17 @@ extension PHCachingImageManager {
                 callback(image, isLowRes)
             }
         }
+    }
+    
+    func fetchData(photo asset: PHAsset, callback: @escaping (Data?) -> Void) {
+        let options = PHImageRequestOptions()
+        options.isNetworkAccessAllowed = true
+        options.isSynchronous = true
+
+        requestImageData(for: asset, options: options, resultHandler: { data, uti, orientation, info in
+            DispatchQueue.main.async {
+                callback(data)
+            }
+        })
     }
 }

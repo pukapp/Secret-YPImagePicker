@@ -19,4 +19,11 @@
 "YPImagePickerVideoDurationTitle" = "Durasi video";
 "YPImagePickerVideoTooLong" = "Pilih durasi video kurang dari %@ detik";
 "YPImagePickerVideoTooShort" = " Durasi video setidaknya %@ detik";
-"YPImagePickerWarningItemsLimit" = "Hanya diperbolehkan %d foto atau video";
+"YPImagePickerWarningItemsLimit" = "Hanya diperbolehkan %d foto";
+
+"YPImagePickerWarningCanChooseOneType" = "Can't select photos and videos at the same time";
+
+"YPImagePickerWarningMaxVideoLimitTitle" = "Video Amount Limit";
+"YPImagePickerWarningMaxVideoLimitText" = "The limit is One Video";
+"YPImagePickerWarningBadVideoTitle" = "The Bad Video";
+"YPImagePickerWarningBadVideoText" = "The video has been corrupted";

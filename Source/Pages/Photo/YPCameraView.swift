@@ -18,10 +18,16 @@ class YPCameraView: UIView, UIGestureRecognizerDelegate {
     let shotButton = UIButton()
     let flashButton = UIButton()
     let timeElapsedLabel = UILabel()
+    ///新增录制标识
+    let recordShineImgV = UIImageView(image: UIImage(named: "wr_video_record_iden"))
     let progressBar = UIProgressView()
-
+    ///新增长按录制提示
+    let recordTip = UILabel()
+    
     convenience init(overlayView: UIView? = nil) {
         self.init(frame: .zero)
+        
+        recordShineImgV.backgroundColor = .red
         
         if let overlayView = overlayView {
             // View Hierarchy
@@ -30,10 +36,12 @@ class YPCameraView: UIView, UIGestureRecognizerDelegate {
                 overlayView,
                 progressBar,
                 timeElapsedLabel,
+                recordShineImgV,
                 flashButton,
                 flipButton,
                 buttonsContainer.sv(
-                    shotButton
+                    shotButton,
+                    recordTip
                 )
             )
         } else {
@@ -42,10 +50,12 @@ class YPCameraView: UIView, UIGestureRecognizerDelegate {
                 previewViewContainer,
                 progressBar,
                 timeElapsedLabel,
+                recordShineImgV,
                 flashButton,
                 flipButton,
                 buttonsContainer.sv(
-                    shotButton
+                    shotButton,
+                    recordTip
                 )
             )
         }
@@ -90,23 +100,40 @@ class YPCameraView: UIView, UIGestureRecognizerDelegate {
         flipButton.Bottom == previewViewContainer.Bottom - 15
         
         timeElapsedLabel-(15+sideMargin)-|
-        timeElapsedLabel.Top == previewViewContainer.Top + 15
+        timeElapsedLabel.Top == previewViewContainer.Bottom + 10
+        
+        recordShineImgV-10-(timeElapsedLabel)-|
+        recordShineImgV.CenterY == timeElapsedLabel.CenterY
+        recordShineImgV.size(6)
         
         shotButton.centerVertically()
         shotButton.size(84).centerHorizontally()
 
+        recordTip.centerHorizontally()
+        recordTip.Top == shotButton.Bottom + 10
+        
         // Style
         backgroundColor = YPConfig.colors.photoVideoScreenBackgroundColor
         previewViewContainer.backgroundColor = UIColor.ypLabel
         timeElapsedLabel.style { l in
-            l.textColor = .white
+            l.textColor = UIColor.init(r: 51/255.0, g: 51/255.0, b: 51/255.0, a: 1)
             l.text = "00:00"
             l.isHidden = true
-            l.font = YPConfig.fonts.cameraTimeElapsedFont
+            l.font = .monospacedDigitSystemFont(ofSize: 15, weight: UIFont.Weight.medium)
+        }
+        recordShineImgV.style { r in
+            r.layer.cornerRadius = 3
+            r.layer.masksToBounds = true
+            r.isHidden = true
         }
         progressBar.style { p in
-            p.trackTintColor = .clear
-            p.tintColor = .ypSystemRed
+            p.backgroundColor = UIColor(r: 220/255.0, g: 219/255.0, b: 219/255.0, a: 1)
+            p.trackTintColor = UIColor(r: 83/255.0, g: 152/255.0, b: 247/255.0, a: 1)
+        }
+        recordTip.style { r in
+            r.text = "长按录制"
+            r.textColor = UIColor(r: 51/255.0, g: 51/255.0, b: 51/255.0, a: 1)
+            r.font = .monospacedDigitSystemFont(ofSize: 14, weight: UIFont.Weight.medium)
         }
         flashButton.setImage(YPConfig.icons.flashOffIcon, for: .normal)
         flipButton.setImage(YPConfig.icons.loopIcon, for: .normal)

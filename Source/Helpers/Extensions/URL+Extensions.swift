@@ -11,7 +11,8 @@ import UIKit
 extension URL {
     /// Adds a unique path to url
     func appendingUniquePathComponent(pathExtension: String? = nil) -> URL {
-        var pathComponent = UUID().uuidString
+        ///新增localCache标识，用来标记视频缓存，在发布视频那里可以根据此标识，就算沙盒路径变了，也正确获取到路径
+        var pathComponent = "localCache" + UUID().uuidString
         if let pathExtension = pathExtension {
             pathComponent += ".\(pathExtension)"
         }
