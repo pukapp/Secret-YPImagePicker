@@ -128,12 +128,12 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
     // MARK: Setup - ⚙️
     // 这里采用自定义的是因为这里会出现一个bug，当图库点击下一步的时候，导航bar不会改变。此bug无法定位的根源，所以这里先采用自定义的方式
     fileprivate func setupCustomBarButton() {
-        navigationView.backgroundColor = .white
+        navigationView.backgroundColor = UIColor.offWhiteOrBlack
         self.view.addSubview(navigationView)
         navigationView.frame = CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.navBarHeight)
         
         let titleLabel = UILabel.init()
-        titleLabel.textColor = .black
+        titleLabel.textColor = UIColor.make(light: UIColor(r: 48, g: 48, b: 48), dark: UIColor(r: 245, g: 245, b: 245))
         titleLabel.textAlignment = .center
         titleLabel.text = YPConfig.wordings.filter
         titleLabel.font = UIFont.boldSystemFont(ofSize: 16)
@@ -172,7 +172,8 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
             navigationView.addSubview(cancelBtn)
         } else {
             let popBtn = UIButton.init()
-            popBtn.setImage(YPIcons().backButtonIcon, for: .normal)
+            let backBtnColor = UIColor.make(light: UIColor(r: 0, g: 0, b: 0), dark: UIColor(r: 188, g: 188, b: 188))
+            popBtn.setImage(YPIcons().backButtonIcon.stain(for: backBtnColor), for: .normal)
             popBtn.addTarget(self, action: #selector(pop), for: .touchUpInside)
             popBtn.bounds = CGRect.init(x: 0, y: 0, width: 60, height: 20)
             popBtn.center = CGPoint.init(x: navigationView.frame.minX + 13 + 30, y: titleLabel.center.y)

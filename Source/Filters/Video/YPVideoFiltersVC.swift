@@ -86,6 +86,7 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
                                                                action: #selector(cancel))
             navigationItem.leftBarButtonItem?.setFont(font: YPConfig.fonts.leftBarButtonFont, forState: .normal)
         }
+        setupLeftBarButtonItem()
         setupRightBarButtonItem()
     }
     
@@ -113,6 +114,16 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
         super.viewWillDisappear(animated)
         stopPlaybackTimeChecker()
         videoView.stop()
+    }
+    
+    //跟secret使用
+    func setupLeftBarButtonItem() {
+        let backBtnColor = UIColor.make(light: UIColor(r: 0, g: 0, b: 0), dark: UIColor(r: 188, g: 188, b: 188))
+        navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: imageFromBundle("yp_arrow_left").stain(for: backBtnColor), style: .plain, target: self, action: #selector(back))
+    }
+    
+    @objc func back() {
+        self.navigationController?.popViewController(animated: true)
     }
     
     func setupRightBarButtonItem() {
