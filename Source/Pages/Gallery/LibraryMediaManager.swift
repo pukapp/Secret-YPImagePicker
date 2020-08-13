@@ -67,13 +67,13 @@ class LibraryMediaManager {
     }
     
     func fetchVideoUrlAndCrop(for videoAsset: PHAsset,
-                              cropRect: CGRect,
+                              cropRect: CGRect?,
                               callback: @escaping (_ videoURL: URL?) -> Void) {
         fetchVideoUrlAndCropWithDuration(for: videoAsset, cropRect: cropRect, duration: nil, callback: callback)
     }
     
     func fetchVideoUrlAndCropWithDuration(for videoAsset: PHAsset,
-                                          cropRect: CGRect,
+                                          cropRect: CGRect?,
                                           duration: CMTime?,
                                           callback: @escaping (_ videoURL: URL?) -> Void) {
         let videosOptions = PHVideoRequestOptions()
@@ -112,8 +112,8 @@ class LibraryMediaManager {
                 let videoSize = videoTrack.naturalSize.applying(transform)
                 transform.tx = (videoSize.width < 0) ? abs(videoSize.width) : 0.0
                 transform.ty = (videoSize.height < 0) ? abs(videoSize.height) : 0.0
-                transform.tx -= cropRect.minX
-                transform.ty -= cropRect.minY
+                transform.tx -= (cropRect?.minX ?? 0)
+                transform.ty -= (cropRect?.minY ?? 0)
                 layerInstructions.setTransform(transform, at: CMTime.zero)
                 
                 // CompositionInstruction
@@ -124,7 +124,9 @@ class LibraryMediaManager {
                 // Video Composition
                 let videoComposition = AVMutableVideoComposition(propertiesOf: asset)
                 videoComposition.instructions = [mainInstructions]
-                videoComposition.renderSize = cropRect.size // needed?
+                if let cropRect = cropRect {
+                    videoComposition.renderSize = cropRect.size // needed?
+                }
                 
                 // 5. Configuring export session
                 

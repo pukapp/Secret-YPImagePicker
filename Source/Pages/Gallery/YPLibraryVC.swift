@@ -122,9 +122,9 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
             v.assetViewContainer.setMultipleSelectionMode(on: multipleSelectionEnabled)
             v.collectionView.reloadData()
         }
-        if YPConfig.library.defaultMultipleSelection || selection.count > 1 {
-            showMultipleSelection()
-        }
+//        if YPConfig.library.defaultMultipleSelection || selection.count > 1 {
+//            showMultipleSelection()
+//        }
     }
     
     // MARK: - View Lifecycle
@@ -206,6 +206,8 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
         if !multipleSelectionEnabled {
             selection.removeAll()
         }
+        
+        showMultipleSelection()
     }
     
     func showMultipleSelection() {
@@ -472,10 +474,9 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
     
     private func checkVideoLengthAndCrop(for asset: PHAsset,
                                          withCropRect: CGRect? = nil,
-                                         callback: @escaping (_ videoURL: URL) -> Void,
-                                         callError: @escaping (Error?) -> Void) {
+                                         callback: @escaping (_ videoURL: URL?) -> Void) {
         if fitsVideoLengthLimits(asset: asset) == true {
-            //delegate?.libraryViewStartedLoading()
+            delegate?.libraryViewDidTapNext()
             let normalizedCropRect = withCropRect ?? DispatchQueue.main.sync { v.currentCropRect() }
             let ts = targetSize(for: asset, cropRect: normalizedCropRect)
             let xCrop: CGFloat = normalizedCropRect.origin.x * CGFloat(asset.pixelWidth)
@@ -484,21 +485,21 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
                                         y: yCrop,
                                         width: ts.width,
                                         height: ts.height)
-            //mediaManager.fetchVideoUrlAndCrop(for: asset, cropRect: resultCropRect, callback: callback, callError: callError)
+            mediaManager.fetchVideoUrlAndCrop(for: asset, cropRect: resultCropRect, callback: callback)
         }
     }
     
-    private func fetchVideoAndCropWithDuration(for asset: PHAsset,
-                                               withCropRect rect: CGRect,
-                                               duration: Double,
-                                               callback: @escaping (_ videoURL: URL?) -> Void) {
-        delegate?.libraryViewDidTapNext()
-        let timeDuration = CMTimeMakeWithSeconds(duration, preferredTimescale: 1000)
+//    private func fetchVideoAndCropWithDuration(for asset: PHAsset,
+//                                               withCropRect rect: CGRect,
+//                                               duration: Double,
+//                                               callback: @escaping (_ videoURL: URL?) -> Void) {
+//        delegate?.libraryViewDidTapNext()
+//        let timeDuration = CMTimeMakeWithSeconds(duration, preferredTimescale: 1000)
 //        mediaManager.fetchVideoUrlAndCropWithDuration(for: asset,
 //                                                      cropRect: rect,
 //                                                      duration: timeDuration,
 //                                                      callback: callback)
-    }
+//    }
     
     public func selectedMedia(photoCallback: @escaping (_ photo: YPMediaPhoto) -> Void,
                               videoCallback: @escaping (_ videoURL: YPMediaVideo) -> Void,
@@ -539,6 +540,14 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
                         
                     case .video:
                         self.checkVideoLengthAndCrop(for: asset.asset, withCropRect: asset.cropRect, callback: { videoURL in
+                            guard let videoURL = videoURL else {
+                                DispatchQueue.main.async {
+                                    self.delegate?.libraryViewFinishedLoading()
+                                    let alert = YPAlert.badvideoChoose(self.view)
+                                    self.present(alert, animated: true, completion: nil)
+                                }
+                                return
+                            }
                             let videoItem = YPMediaVideo(thumbnail: thumbnailFromVideoPath(videoURL),
                                                          videoURL: videoURL,
                                                          naturalSize: naturalSizeFormVideoPath(videoURL),
@@ -546,12 +555,6 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
                                                          asset: asset.asset)
                             resultMediaItems.append(YPMediaItem.video(v: videoItem))
                             asyncGroup.leave()
-                        }, callError: { error in
-                            DispatchQueue.main.async {
-                                self.delegate?.libraryViewFinishedLoading()
-                                let alert = YPAlert.badvideoChoose(self.view)
-                                self.present(alert, animated: true, completion: nil)
-                            }
                         })
                     default:
                         break
@@ -568,24 +571,25 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
                 case .audio, .unknown:
                     return
                 case .video:
-                    break;
-//                    self.fetchVideoAndApplySettings(for: asset, callback: { videoURL in
-//                        DispatchQueue.main.async {
-//                            self.delegate?.libraryViewFinishedLoading()
-//                            let video = YPMediaVideo(thumbnail: thumbnailFromVideoPath(videoURL),
-//                                                     videoURL: videoURL,
-//                                                     naturalSize: naturalSizeFormVideoPath(videoURL),
-//                                                     duration: durationFormVideoPath(videoURL),
-//                                                     asset: asset)
-//                            videoCallback(video)
-//                        }
-//                    }, callError: { error in
-//                        DispatchQueue.main.async {
-//                            self.delegate?.libraryViewFinishedLoading()
-//                            let alert = YPAlert.badvideoChoose(self.view)
-//                            self.present(alert, animated: true, completion: nil)
-//                        }
-//                    })
+                    self.checkVideoLengthAndCrop(for: asset, callback: { videoURL in
+                        DispatchQueue.main.async {
+                            guard let videoURL = videoURL else {
+                                DispatchQueue.main.async {
+                                    self.delegate?.libraryViewFinishedLoading()
+                                    let alert = YPAlert.badvideoChoose(self.view)
+                                    self.present(alert, animated: true, completion: nil)
+                                }
+                                return
+                            }
+                            self.delegate?.libraryViewFinishedLoading()
+                            let video = YPMediaVideo(thumbnail: thumbnailFromVideoPath(videoURL),
+                                                     videoURL: videoURL,
+                                                     naturalSize: naturalSizeFormVideoPath(videoURL),
+                                                     duration: durationFormVideoPath(videoURL),
+                                                     asset: asset)
+                            videoCallback(video)
+                        }
+                    })
                 case .image:
                     self.fetchImageAndCrop(for: asset) { image, exifMeta in
                         DispatchQueue.main.async {

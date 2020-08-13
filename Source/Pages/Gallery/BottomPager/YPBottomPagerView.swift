@@ -18,7 +18,7 @@ final class YPBottomPagerView: UIView {
         self.init(frame: .zero)
         backgroundColor = .offWhiteOrBlack
         
-        sv(
+        subviews(
             scrollView,
             header
         )
@@ -31,8 +31,7 @@ final class YPBottomPagerView: UIView {
         )
         
         if #available(iOS 11.0, *) {
-            header.bottom(0)
-            //header.Bottom == safeAreaLayoutGuide.Bottom
+            header.Bottom == safeAreaLayoutGuide.Bottom
         } else {
             header.bottom(0)
         }

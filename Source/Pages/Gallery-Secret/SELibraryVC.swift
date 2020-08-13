@@ -110,23 +110,24 @@ class SELibraryVC: UIViewController {
                     asyncGroup.leave()
                 })
             case .video:
-                break
-//                mediaManager.fetchVideoUrlAndCrop(for: asset, cropRect: nil, callback: { videoURL in
-//                    let videoItem = YPMediaVideo(thumbnail: thumbnailFromVideoPath(videoURL),
-//                                                 videoURL: videoURL,
-//                                                 naturalSize: naturalSizeFormVideoPath(videoURL),
-//                                                 duration: durationFormVideoPath(videoURL),
-//                                                 asset: asset)
-//                    resultMediaItems.append(YPMediaItem.video(v: videoItem))
-//                    asyncGroup.leave()
-//                }, callError: {[weak self] error in
-//                    guard let self = self else { return }
-//                    DispatchQueue.main.async {
-//                        self.endDeal()
-//                        let alert = YPAlert.badvideoChoose(self.view)
-//                        self.present(alert, animated: true, completion: nil)
-//                    }
-//                })
+                mediaManager.fetchVideoUrlAndCrop(for: asset, cropRect: nil, callback: {[weak self] videoURL in
+                    guard let self = self else { return }
+                    guard let videoURL = videoURL else {
+                        DispatchQueue.main.async {
+                            self.endDeal()
+                            let alert = YPAlert.badvideoChoose(self.view)
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                        return
+                    }
+                    let videoItem = YPMediaVideo(thumbnail: thumbnailFromVideoPath(videoURL),
+                                                 videoURL: videoURL,
+                                                 naturalSize: naturalSizeFormVideoPath(videoURL),
+                                                 duration: durationFormVideoPath(videoURL),
+                                                 asset: asset)
+                    resultMediaItems.append(YPMediaItem.video(v: videoItem))
+                    asyncGroup.leave()
+                })
             default:
                 break
             }

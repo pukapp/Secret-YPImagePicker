@@ -23,7 +23,6 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
     ///新增时间范围表示
     @IBOutlet weak var startTimeLabel: UILabel!
     @IBOutlet weak var endTimeLabel: UILabel!
-    @IBOutlet weak var totalTimeLabel: UILabel!
     
     public var inputVideo: YPMediaVideo!
     public var inputAsset: AVAsset { return AVAsset(url: inputVideo.url) }
