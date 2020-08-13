@@ -166,7 +166,7 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
 //                default:
 //                    print("YPVideoFiltersVC Export session completed with \(session.status) status. Not handled")
 //=======
-            try trimmedAsset.export(to: destinationURL) { [weak self] in
+            try trimmedAsset.export(to: destinationURL) { [weak self] _ in
                 guard let strongSelf = self else { return }
                 
                 DispatchQueue.main.async {
@@ -178,7 +178,7 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
                     didSave(YPMediaItem.video(v: resultVideo))
                     strongSelf.setupRightBarButtonItem()
 //>>>>>>> secret
- //               }
+                }
             }
         } catch let error {
             print("💩 \(error)")

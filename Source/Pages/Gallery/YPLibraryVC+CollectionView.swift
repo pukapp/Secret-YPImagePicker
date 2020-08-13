@@ -160,7 +160,9 @@ extension YPLibraryVC: UICollectionViewDelegate {
                                                       cropRect: currentSelection.cropRect,
                                                       scrollViewContentOffset: currentSelection.scrollViewContentOffset,
                                                       scrollViewZoomScale: currentSelection.scrollViewZoomScale,
-                                                      assetIdentifier: currentSelection.assetIdentifier)
+                                                      assetIdentifier: currentSelection.assetIdentifier,
+                                                      mediaType: asset.mediaType,
+                                                      isSelected: cell.isSelected)
             }
             cell.multipleSelectionIndicator.set(number: index + 1) // start at 1, not 0
         } else {
@@ -215,10 +217,10 @@ extension YPLibraryVC: UICollectionViewDelegate {
             selection.removeAll()
 
             addToSelection(indexPath: indexPath, isSelected: false)
-            if let selectedRow = previouslySelectedIndices.first?.index {
-                let previouslySelectedIndexPath = IndexPath(row: selectedRow, section: 0)
-                collectionView.reloadItems(at: [previouslySelectedIndexPath])
-            }
+//            if let selectedRow = previouslySelectedIndices.first?.index {
+//                let previouslySelectedIndexPath = IndexPath(row: selectedRow, section: 0)
+//                collectionView.reloadItems(at: [previouslySelectedIndexPath])
+//            }
         }
     }
     

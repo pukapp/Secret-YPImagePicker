@@ -261,6 +261,14 @@ extension ExampleViewController {
 
 // YPImagePickerDelegate
 extension ExampleViewController: YPImagePickerDelegate {
+    func didFinishPicking(proceedItems: [YPMediaItem], isOriginal: Bool, completion: (() -> Void)?) {
+        
+    }
+    
+    func close(completion: (() -> Void)?) {
+        
+    }
+    
     func noPhotos() {}
 
     func shouldAddToSelection(indexPath: IndexPath, numSelections: Int) -> Bool {

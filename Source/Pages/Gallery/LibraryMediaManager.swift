@@ -66,20 +66,16 @@ class LibraryMediaManager {
         }
     }
     
-//<<<<<<< HEAD
-//    func fetchVideoUrlAndCrop(for videoAsset: PHAsset,
-//                              cropRect: CGRect,
-//                              callback: @escaping (_ videoURL: URL?) -> Void) {
-//        fetchVideoUrlAndCropWithDuration(for: videoAsset, cropRect: cropRect, duration: nil, callback: callback)
-//    }
-//
-//    func fetchVideoUrlAndCropWithDuration(for videoAsset: PHAsset,
-//                                          cropRect: CGRect,
-//                                          duration: CMTime?,
-//                                          callback: @escaping (_ videoURL: URL?) -> Void) {
-//=======
-    func fetchVideoUrlAndCrop(for videoAsset: PHAsset, cropRect: CGRect?, callback: @escaping (URL) -> Void, callError: @escaping (Error?) -> Void) {
-//>>>>>>> secret
+    func fetchVideoUrlAndCrop(for videoAsset: PHAsset,
+                              cropRect: CGRect,
+                              callback: @escaping (_ videoURL: URL?) -> Void) {
+        fetchVideoUrlAndCropWithDuration(for: videoAsset, cropRect: cropRect, duration: nil, callback: callback)
+    }
+    
+    func fetchVideoUrlAndCropWithDuration(for videoAsset: PHAsset,
+                                          cropRect: CGRect,
+                                          duration: CMTime?,
+                                          callback: @escaping (_ videoURL: URL?) -> Void) {
         let videosOptions = PHVideoRequestOptions()
         videosOptions.isNetworkAccessAllowed = true
         videosOptions.deliveryMode = .highQualityFormat
@@ -123,46 +119,16 @@ class LibraryMediaManager {
                 // CompositionInstruction
                 let mainInstructions = AVMutableVideoCompositionInstruction()
                 mainInstructions.timeRange = trackTimeRange
-//<<<<<<< HEAD
-//                mainInstructions.layerInstructions = [layerInstructions]
-//
-//                // Video Composition
-//                let videoComposition = AVMutableVideoComposition(propertiesOf: asset)
-//                videoComposition.instructions = [mainInstructions]
-//                videoComposition.renderSize = cropRect.size // needed?
-//
-//                // 5. Configuring export session
-//
-//                let fileURL = URL(fileURLWithPath: NSTemporaryDirectory())
-//=======
+                mainInstructions.layerInstructions = [layerInstructions]
                 
-                // 3. Adding the layer instructions. Transforming
-                if let cropRect = cropRect {
-                    let layerInstructions = AVMutableVideoCompositionLayerInstruction(assetTrack: videoCompositionTrack)
-                    layerInstructions.setTransform(videoTrack.getTransform(cropRect: cropRect), at: CMTime.zero)
-                    layerInstructions.setOpacity(1.0, at: CMTime.zero)
-                    mainInstructions.layerInstructions = [layerInstructions]
-                }
+                // Video Composition
+                let videoComposition = AVMutableVideoComposition(propertiesOf: asset)
+                videoComposition.instructions = [mainInstructions]
+                videoComposition.renderSize = cropRect.size // needed?
                 
-                // 4. Create the main composition and add the instructions
-                var videoComposition: AVMutableVideoComposition?
-                if let cropRect = cropRect {
-                    videoComposition = AVMutableVideoComposition()
-                    videoComposition!.renderSize = cropRect.size
-                    videoComposition!.instructions = [mainInstructions]
-                    videoComposition!.frameDuration = CMTimeMake(value: 1, timescale: 30)
-                }
                 // 5. Configuring export session
                 
-                let exportSession = AVAssetExportSession(asset: assetComposition,
-                                                         presetName: YPConfig.video.compression)
-                exportSession?.outputFileType = YPConfig.video.fileType
-                exportSession?.shouldOptimizeForNetworkUse = true
-                if let videoComposition = videoComposition {
-                    exportSession?.videoComposition = videoComposition
-                }
-                exportSession?.outputURL = URL(fileURLWithPath: NSTemporaryDirectory())
-//>>>>>>> secret
+                let fileURL = URL(fileURLWithPath: NSTemporaryDirectory())
                     .appendingUniquePathComponent(pathExtension: YPConfig.video.fileType.fileExtension)
                 let exportSession = assetComposition
                     .export(to: fileURL,
@@ -200,35 +166,10 @@ class LibraryMediaManager {
                                                             userInfo: exportSession,
                                                             repeats: true)
                 }
-//<<<<<<< HEAD
-//
-//                if let s = exportSession {
-//                    self.currentExportSessions.append(s)
-//                }
-//=======
-                
-                self.currentExportSessions.append(exportSession!)
-                exportSession?.exportAsynchronously(completionHandler: {
-                    DispatchQueue.main.async {
-                        if let url = exportSession?.outputURL, exportSession?.status == .completed {
-                            callback(url)
-                            if let index = self.currentExportSessions.index(of:exportSession!) {
-                                self.currentExportSessions.remove(at: index)
-                            }
-                        } else {
-                            if let index = self.currentExportSessions.index(of:exportSession!) {
-                                self.currentExportSessions.remove(at: index)
-                            }
-                            self.exportTimer?.invalidate()
-                            self.exportTimer = nil
-                            self.v?.updateProgress(0)
-                            let error = exportSession?.error
-                            callError(error)
-                            print("error exporting video \(String(describing: error))")
-                        }
-                    }
-                })
-//>>>>>>> secret
+
+                if let s = exportSession {
+                    self.currentExportSessions.append(s)
+                }
             } catch let error {
                 print("⚠️ PHCachingImageManager >>> \(error)")
             }
