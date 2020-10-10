@@ -81,7 +81,7 @@ class ExampleViewController: UIViewController {
 
         /* Choose what media types are available in the library. Defaults to `.photo` */
         config.library.mediaType = .photoAndVideo
-		config.library.itemOverlayType = .grid
+        config.library.itemOverlayType = .grid
         /* Enables selecting the front camera by default, useful for avatars. Defaults to false */
         // config.usesFrontCamera = true
 
@@ -174,12 +174,12 @@ class ExampleViewController: UIViewController {
         config.library.preselectedItems = selectedItems
 
 
-		// Customise fonts
-		//config.fonts.menuItemFont = UIFont.systemFont(ofSize: 22.0, weight: .semibold)
-		//config.fonts.pickerTitleFont = UIFont.systemFont(ofSize: 22.0, weight: .black)
-		//config.fonts.rightBarButtonFont = UIFont.systemFont(ofSize: 22.0, weight: .bold)
-		//config.fonts.navigationBarTitleFont = UIFont.systemFont(ofSize: 22.0, weight: .heavy)
-		//config.fonts.leftBarButtonFont = UIFont.systemFont(ofSize: 22.0, weight: .heavy)
+        // Customise fonts
+        //config.fonts.menuItemFont = UIFont.systemFont(ofSize: 22.0, weight: .semibold)
+        //config.fonts.pickerTitleFont = UIFont.systemFont(ofSize: 22.0, weight: .black)
+        //config.fonts.rightBarButtonFont = UIFont.systemFont(ofSize: 22.0, weight: .bold)
+        //config.fonts.navigationBarTitleFont = UIFont.systemFont(ofSize: 22.0, weight: .heavy)
+        //config.fonts.leftBarButtonFont = UIFont.systemFont(ofSize: 22.0, weight: .heavy)
 
         let picker = YPImagePicker(configuration: config)
 
@@ -275,3 +275,4 @@ extension ExampleViewController: YPImagePickerDelegate {
         return true// indexPath.row != 2
     }
 }
+
