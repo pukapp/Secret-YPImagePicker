@@ -3,14 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3193D7E12531AC300091C212 /* Stevia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3193D7DF2531AC300091C212 /* Stevia.framework */; };
-		3193D7E22531AC300091C212 /* Stevia.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3193D7DF2531AC300091C212 /* Stevia.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3193D7E32531AC300091C212 /* PryntTrimmerView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3193D7E02531AC300091C212 /* PryntTrimmerView.framework */; };
-		3193D7E42531AC300091C212 /* PryntTrimmerView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3193D7E02531AC300091C212 /* PryntTrimmerView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		31A3BCAD2535B01100F0541D /* PryntTrimmerView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3193D7E02531AC300091C212 /* PryntTrimmerView.framework */; };
+		31A649A02536FC0C0008554E /* Stevia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3193D7DF2531AC300091C212 /* Stevia.framework */; };
+		31A649AB2536FC530008554E /* YPImagePicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31A649A82536FC3B0008554E /* YPImagePicker.framework */; };
+		31A649AC2536FC530008554E /* YPImagePicker.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 31A649A82536FC3B0008554E /* YPImagePicker.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		31CC545C2531A8880071B42D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC545B2531A8880071B42D /* AppDelegate.swift */; };
 		31CC545E2531A8880071B42D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC545D2531A8880071B42D /* SceneDelegate.swift */; };
 		31CC54602531A8880071B42D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC545F2531A8880071B42D /* ViewController.swift */; };
@@ -18,37 +18,33 @@
 		31CC54652531A88A0071B42D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31CC54642531A88A0071B42D /* Assets.xcassets */; };
 		31CC54682531A88A0071B42D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 31CC54662531A88A0071B42D /* LaunchScreen.storyboard */; };
 		31CC546F2531A8E00071B42D /* ExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC546E2531A8E00071B42D /* ExampleViewController.swift */; };
-		31CC54712531A92E0071B42D /* YPImagePicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99428A201E7BE04000B765A9 /* YPImagePicker.framework */; };
-		31CC54722531A92E0071B42D /* YPImagePicker.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 99428A201E7BE04000B765A9 /* YPImagePicker.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3193D7E62531AD000091C212 /* PBXContainerItemProxy */ = {
+		31A649A72536FC3B0008554E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 99428A1B1E7BE04000B765A9 /* YPImagePicker.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 52412A921CA6114A0073C4BE;
-			remoteInfo = YPImagePicker;
-		};
-		99428A1F1E7BE04000B765A9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 99428A1B1E7BE04000B765A9 /* YPImagePicker.xcodeproj */;
+			containerPortal = 31A649A32536FC3B0008554E /* YPImagePicker.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 52412A931CA6114A0073C4BE;
+			remoteInfo = YPImagePicker;
+		};
+		31A649A92536FC450008554E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31A649A32536FC3B0008554E /* YPImagePicker.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 52412A921CA6114A0073C4BE;
 			remoteInfo = YPImagePicker;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		31CC54732531A92E0071B42D /* Embed Frameworks */ = {
+		31A649AD2536FC530008554E /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3193D7E42531AC300091C212 /* PryntTrimmerView.framework in Embed Frameworks */,
-				3193D7E22531AC300091C212 /* Stevia.framework in Embed Frameworks */,
-				31CC54722531A92E0071B42D /* YPImagePicker.framework in Embed Frameworks */,
+				31A649AC2536FC530008554E /* YPImagePicker.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -58,6 +54,7 @@
 /* Begin PBXFileReference section */
 		3193D7DF2531AC300091C212 /* Stevia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stevia.framework; path = ../Carthage/Build/iOS/Stevia.framework; sourceTree = "<group>"; };
 		3193D7E02531AC300091C212 /* PryntTrimmerView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PryntTrimmerView.framework; path = ../Carthage/Build/iOS/PryntTrimmerView.framework; sourceTree = "<group>"; };
+		31A649A32536FC3B0008554E /* YPImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = YPImagePicker.xcodeproj; path = ../YPImagePicker.xcodeproj; sourceTree = "<group>"; };
 		31CC54592531A8880071B42D /* YPImagePickerExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YPImagePickerExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		31CC545B2531A8880071B42D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		31CC545D2531A8880071B42D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -67,7 +64,6 @@
 		31CC54672531A88A0071B42D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		31CC54692531A88A0071B42D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		31CC546E2531A8E00071B42D /* ExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
-		99428A1B1E7BE04000B765A9 /* YPImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = YPImagePicker.xcodeproj; path = ../YPImagePicker.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,15 +71,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3193D7E32531AC300091C212 /* PryntTrimmerView.framework in Frameworks */,
-				3193D7E12531AC300091C212 /* Stevia.framework in Frameworks */,
-				31CC54712531A92E0071B42D /* YPImagePicker.framework in Frameworks */,
+				31A649AB2536FC530008554E /* YPImagePicker.framework in Frameworks */,
+				31A649A02536FC0C0008554E /* Stevia.framework in Frameworks */,
+				31A3BCAD2535B01100F0541D /* PryntTrimmerView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		31A649A42536FC3B0008554E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				31A649A82536FC3B0008554E /* YPImagePicker.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		31CC545A2531A8880071B42D /* YPImagePickerExample */ = {
 			isa = PBXGroup;
 			children = (
@@ -102,7 +106,7 @@
 		994289FD1E7BE02400B765A9 = {
 			isa = PBXGroup;
 			children = (
-				99428A1B1E7BE04000B765A9 /* YPImagePicker.xcodeproj */,
+				31A649A32536FC3B0008554E /* YPImagePicker.xcodeproj */,
 				31CC545A2531A8880071B42D /* YPImagePickerExample */,
 				99428A071E7BE02400B765A9 /* Products */,
 				99428A231E7BE17800B765A9 /* Frameworks */,
@@ -113,14 +117,6 @@
 			isa = PBXGroup;
 			children = (
 				31CC54592531A8880071B42D /* YPImagePickerExample.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		99428A1C1E7BE04000B765A9 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				99428A201E7BE04000B765A9 /* YPImagePicker.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -144,12 +140,13 @@
 				31CC54552531A8880071B42D /* Sources */,
 				31CC54562531A8880071B42D /* Frameworks */,
 				31CC54572531A8880071B42D /* Resources */,
-				31CC54732531A92E0071B42D /* Embed Frameworks */,
+				31A3BCA72535ABBE00F0541D /* Carthage */,
+				31A649AD2536FC530008554E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				3193D7E72531AD000091C212 /* PBXTargetDependency */,
+				31A649AA2536FC450008554E /* PBXTargetDependency */,
 			);
 			name = YPImagePickerExample;
 			productName = YPImagePickerExample;
@@ -168,7 +165,6 @@
 				TargetAttributes = {
 					31CC54582531A8880071B42D = {
 						CreatedOnToolsVersion = 11.6;
-						DevelopmentTeam = K7PT8BFN3J;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -186,8 +182,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 99428A1C1E7BE04000B765A9 /* Products */;
-					ProjectRef = 99428A1B1E7BE04000B765A9 /* YPImagePicker.xcodeproj */;
+					ProductGroup = 31A649A42536FC3B0008554E /* Products */;
+					ProjectRef = 31A649A32536FC3B0008554E /* YPImagePicker.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -198,11 +194,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		99428A201E7BE04000B765A9 /* YPImagePicker.framework */ = {
+		31A649A82536FC3B0008554E /* YPImagePicker.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = YPImagePicker.framework;
-			remoteRef = 99428A1F1E7BE04000B765A9 /* PBXContainerItemProxy */;
+			remoteRef = 31A649A72536FC3B0008554E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -220,6 +216,29 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		31A3BCA72535ABBE00F0541D /* Carthage */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"$(SRCROOT)/input.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = Carthage;
+			outputFileListPaths = (
+				"$(SRCROOT)/output.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n/usr/local/bin/carthage copy-frameworks\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		31CC54552531A8880071B42D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -235,10 +254,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3193D7E72531AD000091C212 /* PBXTargetDependency */ = {
+		31A649AA2536FC450008554E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = YPImagePicker;
-			targetProxy = 3193D7E62531AD000091C212 /* PBXContainerItemProxy */;
+			targetProxy = 31A649A92536FC450008554E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -265,7 +284,6 @@
 		31CC546B2531A88A0071B42D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -277,7 +295,10 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = YPImagePickerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.purkylin.YPImagePickerExample;
@@ -290,7 +311,6 @@
 		31CC546C2531A88A0071B42D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -302,7 +322,10 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = YPImagePickerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.purkylin.YPImagePickerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -417,7 +440,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

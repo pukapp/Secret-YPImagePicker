@@ -29,6 +29,7 @@ class YPVideoCaptureHelper: NSObject {
     private var previewView: UIView!
     private var motionManager = CMMotionManager()
     private var initVideoZoomFactor: CGFloat = 1.0
+    private var videoLayer: AVCaptureVideoPreviewLayer!
     
     ///新增录制视频时长短回调
     public var recordToShort: (() -> Void)?
@@ -288,6 +289,13 @@ class YPVideoCaptureHelper: NSObject {
             videoLayer.frame = self.previewView.bounds
             videoLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
             self.previewView.layer.addSublayer(videoLayer)
+            self.videoLayer = videoLayer
+        }
+    }
+    
+    func updatePreviewLayerSize() {
+        if videoLayer != nil {
+            videoLayer.frame = self.previewView.bounds
         }
     }
 }

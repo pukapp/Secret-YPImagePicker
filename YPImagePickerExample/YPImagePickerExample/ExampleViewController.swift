@@ -11,6 +11,7 @@ import YPImagePicker
 import AVFoundation
 import AVKit
 import Photos
+import Stevia
 
 class ExampleViewController: UIViewController {
     var selectedItems = [YPMediaItem]()
@@ -35,17 +36,24 @@ class ExampleViewController: UIViewController {
         pickButton.setTitleColor(.black, for: .normal)
         pickButton.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         pickButton.addTarget(self, action: #selector(showPicker), for: .touchUpInside)
-        view.addSubview(pickButton)
-        pickButton.center = view.center
+
+
 
         resultsButton.setTitle("Show selected", for: .normal)
         resultsButton.setTitleColor(.black, for: .normal)
-        resultsButton.frame = CGRect(x: 0,
-                                     y: UIScreen.main.bounds.height - 100,
-                                     width: UIScreen.main.bounds.width,
-                                     height: 100)
+//        resultsButton.frame = CGRect(x: 0,
+//                                     y: UIScreen.main.bounds.height - 100,
+//                                     width: UIScreen.main.bounds.width,
+//                                     height: 100)
+        
+        
         resultsButton.addTarget(self, action: #selector(showResults), for: .touchUpInside)
-        view.addSubview(resultsButton)
+//        view.addSubview(resultsButton)
+        
+        view.subviews(pickButton, resultsButton)
+        pickButton.centerInContainer()
+        resultsButton.centerHorizontally()
+        resultsButton.Bottom == view.Bottom - 20
     }
 
     @objc
@@ -125,7 +133,7 @@ class ExampleViewController: UIViewController {
         config.video.libraryTimeLimit = 500.0
 
         /* Adds a Crop step in the photo taking process, after filters. Defaults to .none */
-        config.showsCrop = .rectangle(ratio: (16/9))
+//        config.showsCrop = .rectangle(ratio: (16/9))
 
         /* Defines the overlay view for the camera. Defaults to UIView(). */
         // let overlayView = UIView()

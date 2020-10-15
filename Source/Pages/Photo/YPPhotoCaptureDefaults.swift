@@ -97,6 +97,12 @@ extension YPPhotoCapture {
         }
     }
     
+    func updatePreviewLayerSize() {
+        if videoLayer != nil {
+            videoLayer.frame = self.previewView.bounds
+        }
+    }
+    
     // MARK: - Focus
     
     func focus(on point: CGPoint) {

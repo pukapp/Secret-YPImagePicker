@@ -23,23 +23,12 @@ final class YPPagerMenu: UIView {
     var separators = [UIView]()
     
     func setUpMenuItemsConstraints() {
-        let screenWidth = YPImagePickerConfiguration.screenWidth
-        let menuItemWidth: CGFloat = screenWidth / CGFloat(menuItems.count)
-        var previousMenuItem: YPMenuItem?
-        for m in menuItems {
-            sv(
-                m
-            )
-            
-            m.fillVertically().width(menuItemWidth)
-            if let pm = previousMenuItem {
-                pm-0-m
-            } else {
-                |m
-            }
-            
-            previousMenuItem = m
-        }
+        let stackView = UIStackView(arrangedSubviews: menuItems)
+        stackView.distribution = .fillEqually
+        stackView.axis = .horizontal
+        
+        subviews(stackView)
+        stackView.fillContainer()
     }
     
     override func updateConstraints() {

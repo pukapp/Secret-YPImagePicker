@@ -37,6 +37,12 @@ public class YPCameraVC: UIViewController, UIGestureRecognizerDelegate, YPPermis
         YPDeviceOrientationHelper.shared.stopDeviceOrientationNotifier()
     }
     
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        photoCapture.updatePreviewLayerSize()
+    }
+    
     override public func viewDidLoad() {
         super.viewDidLoad()
         v.flashButton.isHidden = true

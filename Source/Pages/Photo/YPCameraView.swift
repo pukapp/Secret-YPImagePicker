@@ -74,7 +74,12 @@ class YPCameraView: UIView, UIGestureRecognizerDelegate {
                 0
             )
             
-            previewViewContainer.heightEqualsWidth()
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                previewViewContainer.heightEqualsWidth()
+            } else {
+                previewViewContainer.Bottom == 100
+            }
+            
         } else {
             layout(
                 0,

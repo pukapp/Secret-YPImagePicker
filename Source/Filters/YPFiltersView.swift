@@ -24,9 +24,9 @@ class YPFiltersView: UIView {
         filtersLoader.startAnimating()
         filtersLoader.color = YPConfig.colors.tintColor
         
-        sv(
+        subviews(
             imageView,
-            collectionViewContainer.sv(
+            collectionViewContainer.subviews(
                 filtersLoader,
                 collectionView
             )
@@ -38,11 +38,13 @@ class YPFiltersView: UIView {
         |-sideMargin-imageView.top(0)-sideMargin-|
         |-sideMargin-collectionViewContainer-sideMargin-|
         collectionViewContainer.bottom(0)
+        imageView.Top == self.Top
         imageView.Bottom == collectionViewContainer.Top
+        collectionViewContainer.Height == 160
         |collectionView.centerVertically().height(160)|
         filtersLoader.centerInContainer()
         
-        imageView.heightEqualsWidth()
+//        imageView.heightEqualsWidth()
         
         backgroundColor = .offWhiteOrBlack
         imageView.contentMode = .scaleAspectFit

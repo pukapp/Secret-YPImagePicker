@@ -19,11 +19,20 @@ final class YPLibraryView: UIView {
     @IBOutlet weak var assetViewContainer: YPAssetViewContainer!
     @IBOutlet weak var assetViewContainerConstraintTop: NSLayoutConstraint!
     
+    @IBOutlet weak var collectionViewConstraintLandscapeTop: NSLayoutConstraint!
+    
+    @IBOutlet weak var collectionViewConstraintPortraitTop: NSLayoutConstraint!
+    
     let maxNumberWarningView = UIView()
     let maxNumberWarningLabel = UILabel()
     let progressView = UIProgressView()
     let line = UIView()
     var shouldShowLoader = false
+    
+    private var isPortrait: Bool {
+        return UIDevice.current.orientation == .portrait || UIDevice.current.orientation == .portraitUpsideDown
+    }
+
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -41,6 +50,29 @@ final class YPLibraryView: UIView {
         
         setupMaxNumberOfItemsView()
         setupProgressBarView()
+        
+//        NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification, object: nil, queue: .main) { [weak self] _ in
+//            self?.updateRotationConstraints()
+//        }
+        
+        updateRotationConstraints()
+        
+        line.isHidden = UIDevice.current.userInterfaceIdiom == .pad
+    }
+    
+    func updateRotationConstraints() {
+        if isPortrait && false {
+            collectionViewConstraintPortraitTop.isActive = true
+            collectionViewConstraintLandscapeTop.isActive = false
+            self.assetViewContainer.isHidden = false
+        } else {
+            collectionViewConstraintPortraitTop.isActive = false
+            collectionViewConstraintLandscapeTop.isActive = true
+            self.assetViewContainer.isHidden = true
+
+        }
+        
+//        self.layoutIfNeeded()
     }
     
     /// At the bottom there is a view that is visible when selected a limit of items with multiple selection

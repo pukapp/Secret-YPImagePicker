@@ -26,6 +26,18 @@ open class YPBottomPager: UIViewController, UIScrollViewDelegate {
         return controllers[currentPage]
     }
     
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification, object: nil, queue: .main) { [weak self] _ in
+            self?.didDeviceRotate()
+        }
+    }
+    
+    func didDeviceRotate() {
+        startOnPage(currentPage)
+    }
+    
     override open func loadView() {
         self.automaticallyAdjustsScrollViewInsets = false
         v.scrollView.delegate = self
@@ -42,29 +54,26 @@ open class YPBottomPager: UIViewController, UIScrollViewDelegate {
         if !v.header.menuItems.isEmpty {
             let menuIndex = (targetContentOffset.pointee.x + v.frame.size.width) / v.frame.size.width
             let selectedIndex = Int(round(menuIndex)) - 1
-            if selectedIndex != currentPage {
+            if selectedIndex != currentPage || UIDevice.current.userInterfaceIdiom == .pad {
                 selectPage(selectedIndex)
             }
         }
     }
     
     func reload() {
-        let screenWidth = YPImagePickerConfiguration.screenWidth
-        let viewWidth: CGFloat = screenWidth
-        for (index, c) in controllers.enumerated() {
+        let container = UIStackView()
+        v.scrollView.subviews(container)
+        container.fillContainer()
+        container.Height == v.scrollView.Height
+        container.axis = .horizontal
+        
+        for (_, c) in controllers.enumerated() {
             c.willMove(toParent: self)
             addChild(c)
-            let x: CGFloat = CGFloat(index) * viewWidth
-            v.scrollView.sv(c.view)
+            container.addArrangedSubview(c.view)
+            c.view.Width == v.scrollView.Width
             c.didMove(toParent: self)
-            c.view.left(x)
-            c.view.top(0)
-            c.view.width(viewWidth)
-            equal(heights: c.view, v.scrollView)
         }
-        
-        let scrollableWidth: CGFloat = CGFloat(controllers.count) * CGFloat(viewWidth)
-        v.scrollView.contentSize = CGSize(width: scrollableWidth, height: 0)
         
         // Build headers
         for (index, c) in controllers.enumerated() {

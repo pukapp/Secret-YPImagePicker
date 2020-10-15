@@ -56,7 +56,7 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
     // MARK: - Life Cycle ♻️
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+//        self.navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     
     override open func viewWillDisappear(_ animated: Bool) {
@@ -68,7 +68,9 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
         super.viewDidLoad()
         
         view.addSubview(v)
-        v.frame = CGRect.init(x: 0, y: UIScreen.navBarHeight, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - UIScreen.navBarHeight)
+//        v.frame = CGRect.init(x: 0, y: UIScreen.navBarHeight, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - UIScreen.navBarHeight)
+        view.subviews(v)
+        v.fillContainer()
         
         // Setup of main image an thumbnail images
         v.imageView.image = inputPhoto.image
@@ -108,10 +110,10 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
                                                                action: #selector(cancel))
             navigationItem.leftBarButtonItem?.setFont(font: YPConfig.fonts.leftBarButtonFont, forState: .normal)
         }
-        //setupRightBarButton()
+        setupRightBarButton()
         
         // Custom of Navigation Bar
-        setupCustomBarButton()
+//        setupCustomBarButton()
         
         YPHelper.changeBackButtonIcon(self)
         YPHelper.changeBackButtonTitle(self)
@@ -123,6 +125,16 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
         touchDownGR.delegate = self
         v.imageView.addGestureRecognizer(touchDownGR)
         v.imageView.isUserInteractionEnabled = true
+    }
+    
+    fileprivate func setupRightBarButton() {
+        let rightBarButtonTitle = isFromSelectionVC ? YPConfig.wordings.done : YPConfig.wordings.next
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: rightBarButtonTitle,
+                                                            style: .done,
+                                                            target: self,
+                                                            action: #selector(save))
+        navigationItem.rightBarButtonItem?.tintColor = YPConfig.colors.tintColor
+        navigationItem.rightBarButtonItem?.setFont(font: YPConfig.fonts.rightBarButtonFont, forState: .normal)
     }
     
     // MARK: Setup - ⚙️

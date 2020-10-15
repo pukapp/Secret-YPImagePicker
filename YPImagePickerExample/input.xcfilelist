@@ -1,0 +1,5 @@
+$(SRCROOT)/../Carthage/Build/iOS/Stevia.framework
+$(SRCROOT)/../Carthage/Build/iOS/PryntTrimmerView.framework
+# $(SRCROOT)/../Carthage/Build/iOS/YPImagePicker.framework
+
+# $(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/YPImagePicker.framework

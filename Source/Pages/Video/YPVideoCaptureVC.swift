@@ -43,6 +43,11 @@ public class YPVideoCaptureVC: UIViewController, YPPermissionCheckable {
         }
     }
     
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        videoHelper.updatePreviewLayerSize()
+    }
+    
     // MARK: - View LifeCycle
     
     override public func loadView() { view = v }

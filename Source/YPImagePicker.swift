@@ -29,7 +29,15 @@ public protocol YPImagePickerDelegate: AnyObject {
 open class YPImagePicker: UINavigationController {
       
     open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            return .all
+        } else {
+            return .portrait
+        }
+    }
+    
+    open override var shouldAutorotate: Bool {
+        return true
     }
     
     private var _didFinishPicking: (([YPMediaItem], Bool) -> Void)?

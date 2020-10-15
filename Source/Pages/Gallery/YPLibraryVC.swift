@@ -147,6 +147,11 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
 
             strongSelf.updateCropInfo()
         }
+        
+        // 只有ipad默认允许多选
+        if UIDevice.current.userInterfaceIdiom == .pad || true {
+            showMultipleSelection()
+        }
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -220,7 +225,7 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
         multipleSelectionEnabled = !multipleSelectionEnabled
         
         if multipleSelectionEnabled {
-            if selection.isEmpty {
+            if selection.isEmpty && mediaManager.fetchResult != nil {
                 let asset = mediaManager.fetchResult[currentlySelectedIndex]
                 selection = [
                     YPLibrarySelection(index: currentlySelectedIndex,
