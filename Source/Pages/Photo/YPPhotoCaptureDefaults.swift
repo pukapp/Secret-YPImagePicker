@@ -94,12 +94,32 @@ extension YPPhotoCapture {
             self.videoLayer.frame = self.previewView.bounds
             self.videoLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
             self.previewView.layer.addSublayer(self.videoLayer)
+            self.updatePreviewOrientation()
         }
     }
     
     func updatePreviewLayerSize() {
         if videoLayer != nil {
             videoLayer.frame = self.previewView.bounds
+            updatePreviewOrientation()
+        }
+    }
+    
+    func updatePreviewOrientation() {
+        guard let conn = videoLayer?.connection, conn.isVideoOrientationSupported else { return }
+        
+        switch UIDevice.current.orientation {
+        case .portrait:
+            conn.videoOrientation = .portrait
+        case .landscapeRight:
+            conn.videoOrientation = .landscapeLeft
+        case .landscapeLeft:
+            conn.videoOrientation = .landscapeRight
+        case .portraitUpsideDown:
+            conn.videoOrientation = .portraitUpsideDown
+        default:
+//            conn.videoOrientation = .portrait
+            break
         }
     }
     
