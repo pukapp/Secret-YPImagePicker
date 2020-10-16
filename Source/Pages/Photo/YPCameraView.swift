@@ -77,7 +77,7 @@ class YPCameraView: UIView, UIGestureRecognizerDelegate {
             if UIDevice.current.userInterfaceIdiom == .phone {
                 previewViewContainer.heightEqualsWidth()
             } else {
-                previewViewContainer.Bottom == 100
+                previewViewContainer.Bottom == 150
             }
             
         } else {
@@ -137,7 +137,12 @@ class YPCameraView: UIView, UIGestureRecognizerDelegate {
         }
         recordTip.style { r in
             r.text = "长按录制"
-            r.textColor = UIColor(r: 51/255.0, g: 51/255.0, b: 51/255.0, a: 1)
+            
+            if #available(iOS 13.0, *) {
+                r.textColor = UIColor.secondaryLabel
+            } else {
+                r.textColor = UIColor(r: 51/255.0, g: 51/255.0, b: 51/255.0, a: 1)
+            }
             r.font = .monospacedDigitSystemFont(ofSize: 14, weight: UIFont.Weight.medium)
         }
         flashButton.setImage(YPConfig.icons.flashOffIcon, for: .normal)
