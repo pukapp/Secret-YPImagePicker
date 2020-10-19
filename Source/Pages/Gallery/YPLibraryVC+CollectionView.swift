@@ -111,6 +111,10 @@ extension YPLibraryVC {
         v.maxNumberWarningView.isHidden = !isLimitExceeded || multipleSelectionEnabled == false
     }
     
+    func videoCheckLimit() {
+        self.present(YPAlert.videoChooseAmountLimit(self.view), animated: true, completion: nil)
+    }
+    
     func chooseErrorType() {
         v.maxNumberWarningLabel.text = YPConfig.wordings.warningCanChooseOneType
         v.maxNumberWarningView.isHidden = false
@@ -179,6 +183,13 @@ extension YPLibraryVC: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         /// 目前的选择方式为，图片最多9张，视频最多一个，且不能混选。
         /// 所以这里视频那里不能选择多选按钮，图片这里进行判断，只要选择了多选按钮，那么就不能选择视频了
+        let cellIsInTheSelectionPool = isInSelectionPool(indexPath: indexPath)
+        if cellIsInTheSelectionPool {
+            deselect(indexPath: indexPath)
+            collectionView.reloadItems(at: [indexPath])
+            return
+        }
+        
         if multipleSelectionEnabled {
             let type = mediaManager.fetchResult[indexPath.row].mediaType
             if self.selection.contains(where: { return $0.mediaType != type }) {
@@ -188,13 +199,16 @@ extension YPLibraryVC: UICollectionViewDelegate {
                 return
             }
             
-            if type != .image && self.selection.contains(where: { $0.mediaType != .video }) {
+            if type != .image && self.selection.contains(where: { $0.mediaType != .image }) {
                 deselect(indexPath: indexPath)
+                
                 collectionView.deselectItem(at: indexPath, animated: false)
-                chooseErrorType()
+                videoCheckLimit()
+                collectionView.reloadItems(at: [indexPath])
                 return
             }
         }
+        
  
         let previouslySelectedIndexPath = IndexPath(row: currentlySelectedIndex, section: 0)
         currentlySelectedIndex = indexPath.row
