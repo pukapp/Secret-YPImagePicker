@@ -21,7 +21,7 @@ final class YPLibraryView: UIView {
     
     @IBOutlet weak var collectionViewConstraintLandscapeTop: NSLayoutConstraint!
     
-    @IBOutlet weak var collectionViewConstraintPortraitTop: NSLayoutConstraint!
+    @IBOutlet var collectionViewConstraintPortraitTop: NSLayoutConstraint!
     
     let maxNumberWarningView = UIView()
     let maxNumberWarningLabel = UILabel()
@@ -61,18 +61,24 @@ final class YPLibraryView: UIView {
     }
     
     func updateRotationConstraints() {
-        if isPortrait && false {
-            collectionViewConstraintPortraitTop.isActive = true
+        if UIDevice.current.userInterfaceIdiom == .phone {
             collectionViewConstraintLandscapeTop.isActive = false
+            collectionViewConstraintPortraitTop.isActive = true
             self.assetViewContainer.isHidden = false
         } else {
             collectionViewConstraintPortraitTop.isActive = false
             collectionViewConstraintLandscapeTop.isActive = true
+
             self.assetViewContainer.isHidden = true
 
         }
         
-//        self.layoutIfNeeded()
+        self.layoutSubviews()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateRotationConstraints()
     }
     
     /// At the bottom there is a view that is visible when selected a limit of items with multiple selection

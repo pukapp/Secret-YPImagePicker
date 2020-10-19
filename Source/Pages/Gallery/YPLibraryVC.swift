@@ -179,6 +179,12 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
         }
     }
     
+    public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        v.collectionView.reloadData()
+//        v.updateRotationConstraints()
+    }
+    
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         

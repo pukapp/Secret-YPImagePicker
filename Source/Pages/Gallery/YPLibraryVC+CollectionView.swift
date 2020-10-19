@@ -180,7 +180,15 @@ extension YPLibraryVC: UICollectionViewDelegate {
         /// 目前的选择方式为，图片最多9张，视频最多一个，且不能混选。
         /// 所以这里视频那里不能选择多选按钮，图片这里进行判断，只要选择了多选按钮，那么就不能选择视频了
         if multipleSelectionEnabled {
-            guard case .image = mediaManager.fetchResult[indexPath.row].mediaType else {
+            let type = mediaManager.fetchResult[indexPath.row].mediaType
+            if self.selection.contains(where: { return $0.mediaType != type }) {
+                deselect(indexPath: indexPath)
+                collectionView.deselectItem(at: indexPath, animated: false)
+                chooseErrorType()
+                return
+            }
+            
+            if type != .image && self.selection.contains(where: { $0.mediaType != .video }) {
                 deselect(indexPath: indexPath)
                 collectionView.deselectItem(at: indexPath, animated: false)
                 chooseErrorType()
