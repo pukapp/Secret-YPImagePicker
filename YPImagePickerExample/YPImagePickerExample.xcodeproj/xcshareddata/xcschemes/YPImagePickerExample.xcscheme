@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "99428A051E7BE02400B765A9"
+               BlueprintIdentifier = "31CC54582531A8880071B42D"
                BuildableName = "YPImagePickerExample.app"
                BlueprintName = "YPImagePickerExample"
                ReferencedContainer = "container:YPImagePickerExample.xcodeproj">
@@ -27,24 +27,24 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <Testables>
-      </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "99428A051E7BE02400B765A9"
+            BlueprintIdentifier = "31CC54582531A8880071B42D"
             BuildableName = "YPImagePickerExample.app"
             BlueprintName = "YPImagePickerExample"
             ReferencedContainer = "container:YPImagePickerExample.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
+      <Testables>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = "zh-Hans"
+      region = "CN"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -55,14 +55,12 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "99428A051E7BE02400B765A9"
+            BlueprintIdentifier = "31CC54582531A8880071B42D"
             BuildableName = "YPImagePickerExample.app"
             BlueprintName = "YPImagePickerExample"
             ReferencedContainer = "container:YPImagePickerExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -74,7 +72,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "99428A051E7BE02400B765A9"
+            BlueprintIdentifier = "31CC54582531A8880071B42D"
             BuildableName = "YPImagePickerExample.app"
             BlueprintName = "YPImagePickerExample"
             ReferencedContainer = "container:YPImagePickerExample.xcodeproj">

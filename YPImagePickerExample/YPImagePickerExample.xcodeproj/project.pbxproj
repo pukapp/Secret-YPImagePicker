@@ -55,6 +55,8 @@
 		3193D7DF2531AC300091C212 /* Stevia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stevia.framework; path = ../Carthage/Build/iOS/Stevia.framework; sourceTree = "<group>"; };
 		3193D7E02531AC300091C212 /* PryntTrimmerView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PryntTrimmerView.framework; path = ../Carthage/Build/iOS/PryntTrimmerView.framework; sourceTree = "<group>"; };
 		31A649A32536FC3B0008554E /* YPImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = YPImagePicker.xcodeproj; path = ../YPImagePicker.xcodeproj; sourceTree = "<group>"; };
+		31A649B8253D77DC0008554E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
+		31A649B9253D77DC0008554E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		31CC54592531A8880071B42D /* YPImagePickerExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YPImagePickerExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		31CC545B2531A8880071B42D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		31CC545D2531A8880071B42D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = 994289FD1E7BE02400B765A9;
 			productRefGroup = 99428A071E7BE02400B765A9 /* Products */;
@@ -266,6 +269,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				31CC54622531A8880071B42D /* Base */,
+				31A649B8253D77DC0008554E /* zh-Hans */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -274,6 +278,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				31CC54672531A88A0071B42D /* Base */,
+				31A649B9253D77DC0008554E /* zh-Hans */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
