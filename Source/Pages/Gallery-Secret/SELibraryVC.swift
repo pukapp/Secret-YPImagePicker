@@ -247,6 +247,10 @@ class SELibraryVC: UIViewController {
                     block(s == .authorized)
                 }
             }
+        case .limited:
+            block(false)
+        @unknown default:
+            block(false)
         }
     }
     
