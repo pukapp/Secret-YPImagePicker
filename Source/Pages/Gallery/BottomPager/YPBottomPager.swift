@@ -62,7 +62,7 @@ open class YPBottomPager: UIViewController, UIScrollViewDelegate {
     
     func reload() {
         let container = UIStackView()
-        v.scrollView.subviews(container)
+        v.scrollView.sv(container)
         container.fillContainer()
         container.Height == v.scrollView.Height
         container.axis = .horizontal

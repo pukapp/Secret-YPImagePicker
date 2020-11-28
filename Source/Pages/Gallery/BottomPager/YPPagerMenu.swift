@@ -27,7 +27,7 @@ final class YPPagerMenu: UIView {
         stackView.distribution = .fillEqually
         stackView.axis = .horizontal
         
-        subviews(stackView)
+        sv(stackView)
         stackView.fillContainer()
     }
     

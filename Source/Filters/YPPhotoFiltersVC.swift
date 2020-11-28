@@ -69,7 +69,7 @@ open class YPPhotoFiltersVC: UIViewController, IsMediaFilterVC, UIGestureRecogni
         
         view.addSubview(v)
 //        v.frame = CGRect.init(x: 0, y: UIScreen.navBarHeight, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - UIScreen.navBarHeight)
-        view.subviews(v)
+        view.sv(v)
         v.fillContainer()
         
         // Setup of main image an thumbnail images
