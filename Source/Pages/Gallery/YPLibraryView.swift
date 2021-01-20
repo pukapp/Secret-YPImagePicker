@@ -19,9 +19,9 @@ final class YPLibraryView: UIView {
     @IBOutlet weak var assetViewContainer: YPAssetViewContainer!
     @IBOutlet weak var assetViewContainerConstraintTop: NSLayoutConstraint!
     
-    @IBOutlet weak var collectionViewConstraintLandscapeTop: NSLayoutConstraint!
+    @IBOutlet weak var collectionViewConstraintLandscapeTop: NSLayoutConstraint?
     
-    @IBOutlet var collectionViewConstraintPortraitTop: NSLayoutConstraint!
+    @IBOutlet var collectionViewConstraintPortraitTop: NSLayoutConstraint?
     
     let maxNumberWarningView = UIView()
     let maxNumberWarningLabel = UILabel()
@@ -62,12 +62,12 @@ final class YPLibraryView: UIView {
     
     func updateRotationConstraints() {
         if UIDevice.current.userInterfaceIdiom == .phone {
-            collectionViewConstraintLandscapeTop.isActive = false
-            collectionViewConstraintPortraitTop.isActive = true
+            collectionViewConstraintLandscapeTop?.isActive = false
+            collectionViewConstraintPortraitTop?.isActive = true
             self.assetViewContainer.isHidden = false
         } else {
-            collectionViewConstraintPortraitTop.isActive = false
-            collectionViewConstraintLandscapeTop.isActive = true
+            collectionViewConstraintPortraitTop?.isActive = false
+            collectionViewConstraintLandscapeTop?.isActive = true
 
             self.assetViewContainer.isHidden = true
 
