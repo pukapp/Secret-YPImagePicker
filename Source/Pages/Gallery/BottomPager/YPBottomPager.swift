@@ -123,12 +123,14 @@ open class YPBottomPager: UIViewController, UIScrollViewDelegate {
         currentPage = page
         let screenWidth = YPImagePickerConfiguration.screenWidth
         let x = CGFloat(page) * screenWidth
-        v.scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: false)
         //select menut item and deselect others
         for mi in v.header.menuItems {
             mi.deselect()
         }
         let currentMenuItem = v.header.menuItems[page]
         currentMenuItem.select()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.v.scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: false)
+        }
     }
 }
