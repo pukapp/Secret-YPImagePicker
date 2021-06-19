@@ -206,7 +206,8 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
 
     @objc
     func multipleSelectionButtonTapped() {
-        let asset = mediaManager.fetchResult[currentlySelectedIndex]
+        guard let result = mediaManager.fetchResult, result.count > currentlySelectedIndex else { return }
+        let asset = result[currentlySelectedIndex]
         ///只要不是图片类型，就不允许多选
         guard case .image = asset.mediaType else {
             let alert = YPAlert.videoChooseAmountLimit(self.view)
